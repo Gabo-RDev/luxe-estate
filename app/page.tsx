@@ -1,6 +1,6 @@
-import Navigation from "@/components/Navigation";
-import SearchHero from "@/components/SearchHero";
-import PropertyCard from "@/components/PropertyCard";
+import Navigation from "@/components/layout/Navigation";
+import SearchHero from "@/components/home/SearchHero";
+import PropertyCard from "@/components/properties/PropertyCard";
 import { mockProperties } from "@/lib/mock-data";
 
 export default function Home() {
