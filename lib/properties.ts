@@ -4,6 +4,9 @@ import { Property } from '@/types/property';
 // Number of non-featured properties shown per page
 export const PAGE_SIZE = 8;
 
+// Upper bound for pageSize to prevent oversized range queries
+export const MAX_PAGE_SIZE = 100;
+
 // Map snake_case DB row → camelCase Property interface
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToProperty(row: any): Property {
@@ -56,12 +59,14 @@ export async function getProperties(
 ): Promise<PaginatedProperties> {
 	const supabase = await createClient();
 
-	// Normalize inputs: guard against <= 0, NaN, or non-finite values
+	// Normalize inputs: guard against <= 0, NaN, or non-finite values; cap at MAX_PAGE_SIZE
 	const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-	const safePageSize =
+	const safePageSize = Math.min(
 		Number.isFinite(pageSize) && pageSize >= 1
 			? Math.floor(pageSize)
-			: PAGE_SIZE;
+			: PAGE_SIZE,
+		MAX_PAGE_SIZE,
+	);
 
 	const from = (safePage - 1) * safePageSize;
 	const to = from + safePageSize - 1;
