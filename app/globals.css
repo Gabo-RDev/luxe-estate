@@ -1,22 +1,40 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #EEF6F6;
-  --foreground: #19322F;
+	--background: #eef6f6;
+	--foreground: #19322f;
 }
 
 @theme inline {
-  --color-nordic: #19322F;
-  --color-mosque: #006655;
-  --color-hint-of-green: #D9ECC8;
-  --color-clear-day: #EEF6F6;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--color-nordic: #19322f;
+	--color-mosque: #006655;
+	--color-hint-of-green: #d9ecc8;
+	--color-clear-day: #eef6f6;
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans:
+		'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+		Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Segoe UI Symbol';
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+	background: var(--background);
+	color: var(--foreground);
+	font-family: var(--font-sans);
+}
+
+@keyframes fade-slide-up {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fade-slide-up {
+	animation: fade-slide-up 0.4s ease-out both;
 }
