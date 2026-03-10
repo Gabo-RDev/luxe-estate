@@ -1,4 +1,4 @@
-export type PropertyType = "House" | "Apartment" | "Villa" | "Penthouse" | "Studio";
+export type PropertyType = "House" | "Apartment" | "Villa" | "Penthouse";
 export type ListingType = "Buy" | "Rent" | "Sell";
 
 export interface Property {
