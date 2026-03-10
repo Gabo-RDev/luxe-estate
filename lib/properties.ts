@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Property } from '@/types/property';
 
 // Number of non-featured properties shown per page
-export const PAGE_SIZE = 8;
+export const PAGE_SIZE = 6;
 
 // Map snake_case DB row → camelCase Property interface
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,7 +20,7 @@ function rowToProperty(row: any): Property {
 		badge: row.badge ?? undefined,
 		listingType: row.listing_type,
 		propertyType: row.property_type,
-		featured: row.featured,
+		isFeatured: row.is_featured,
 	};
 }
 
@@ -31,7 +31,7 @@ export async function getFeaturedProperties(): Promise<Property[]> {
 	const { data, error } = await supabase
 		.from('properties')
 		.select('*')
-		.eq('featured', true)
+		.eq('is_featured', true)
 		.order('created_at', { ascending: true });
 
 	if (error) {
@@ -62,7 +62,7 @@ export async function getProperties(
 	const { data, error, count } = await supabase
 		.from('properties')
 		.select('*', { count: 'exact' })
-		.eq('featured', false)
+		.eq('is_featured', false)
 		.order('created_at', { ascending: true })
 		.range(from, to);
 

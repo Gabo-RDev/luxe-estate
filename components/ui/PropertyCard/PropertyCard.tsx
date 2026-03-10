@@ -19,11 +19,13 @@ export default function PropertyCard({
 						className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-105'
 						src={property.imageUrl}
 					/>
-					{property.badge && (
-						<div className='absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic'>
-							{property.badge}
-						</div>
-					)}
+					<div className='absolute top-4 left-4 flex gap-2 z-10'>
+						{property.isFeatured && (
+							<div className='bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic flex items-center gap-1 shadow-sm'>
+								Exclusive
+							</div>
+						)}
+					</div>
 					<button className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
 						<span className='material-icons text-xl'>favorite_border</span>
 					</button>
@@ -73,7 +75,14 @@ export default function PropertyCard({
 					className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
 					src={property.imageUrl}
 				/>
-				<button className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
+				<div className='absolute top-4 left-4 flex flex-col gap-2 items-start z-10'>
+					{property.isFeatured && (
+						<div className='bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic flex items-center gap-1 shadow-sm'>
+							Exclusive
+						</div>
+					)}
+				</div>
+				<button className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all z-10'>
 					<span className='material-icons text-xl'>favorite_border</span>
 				</button>
 				<div
