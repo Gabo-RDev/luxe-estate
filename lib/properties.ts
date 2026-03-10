@@ -56,8 +56,15 @@ export async function getProperties(
 ): Promise<PaginatedProperties> {
 	const supabase = await createClient();
 
-	const from = (page - 1) * pageSize;
-	const to = from + pageSize - 1;
+	// Normalize inputs: guard against <= 0, NaN, or non-finite values
+	const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+	const safePageSize =
+		Number.isFinite(pageSize) && pageSize >= 1
+			? Math.floor(pageSize)
+			: PAGE_SIZE;
+
+	const from = (safePage - 1) * safePageSize;
+	const to = from + safePageSize - 1;
 
 	const { data, error, count } = await supabase
 		.from('properties')
@@ -68,16 +75,16 @@ export async function getProperties(
 
 	if (error) {
 		console.error('[getProperties]', error.message);
-		return { data: [], totalCount: 0, totalPages: 0, currentPage: page };
+		return { data: [], totalCount: 0, totalPages: 0, currentPage: safePage };
 	}
 
 	const totalCount = count ?? 0;
-	const totalPages = Math.ceil(totalCount / pageSize);
+	const totalPages = Math.ceil(totalCount / safePageSize);
 
 	return {
 		data: (data ?? []).map(rowToProperty),
 		totalCount,
 		totalPages,
-		currentPage: page,
+		currentPage: safePage,
 	};
 }
