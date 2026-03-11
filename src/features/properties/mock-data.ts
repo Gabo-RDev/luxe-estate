@@ -13,7 +13,7 @@ export const mockProperties: Property[] = [
     badge: "Exclusive",
     listingType: "Buy",
     propertyType: "Villa",
-    featured: true,
+    isFeatured: true,
   },
   {
     id: "prop-2",
@@ -27,7 +27,7 @@ export const mockProperties: Property[] = [
     badge: "New Arrival",
     listingType: "Buy",
     propertyType: "Penthouse",
-    featured: true,
+    isFeatured: true,
   },
   {
     id: "prop-3",
@@ -166,7 +166,7 @@ export const mockProperties: Property[] = [
     badge: "Exclusive",
     listingType: "Buy",
     propertyType: "Villa",
-    featured: true,
+    isFeatured: true,
   },
   {
     id: "prop-14",
@@ -229,6 +229,6 @@ export const mockProperties: Property[] = [
     badge: "New Arrival",
     listingType: "Buy",
     propertyType: "House",
-    featured: true,
+    isFeatured: true,
   }
 ];

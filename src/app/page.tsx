@@ -1,14 +1,14 @@
 import { Suspense } from 'react';
 import Pagination from '@/components/ui/Pagination';
-import PropertyGrid from '@/components/ui/PropertyGrid';
-import Navigation from '@/components/ui/Navigation';
-import SearchHero from '@/components/ui/SearchHero';
-import PropertyCard from '@/components/ui/PropertyCard';
+import PropertyGrid from '@/features/properties/components/PropertyGrid';
+import Navigation from '@/components/layout/Navigation';
+import SearchHero from '@/features/properties/components/SearchHero';
+import PropertyCard from '@/features/properties/components/PropertyCard';
 import {
 	getFeaturedProperties,
 	getProperties,
 	PAGE_SIZE,
-} from '@/lib/properties';
+} from '@/features/properties/api';
 
 interface HomeProps {
 	searchParams: Promise<{ page?: string }>;
