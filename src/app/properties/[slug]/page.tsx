@@ -6,11 +6,11 @@ import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 
 interface PageProps {
-	params: Promise<{ slug: string }>;
+	params: { slug: string };
 }
 
 export default async function PropertyDetailsPage({ params }: PageProps) {
-	const { slug } = await params;
+	const { slug } = params;
 	const property = await getPropertyBySlug(slug);
 
 	if (!property) {
