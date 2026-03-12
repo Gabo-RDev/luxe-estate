@@ -106,10 +106,10 @@ export async function getPropertyBySlug(slug: string): Promise<Property | null> 
 		.from('properties')
 		.select('*')
 		.eq('slug', slug)
-		.single();
+		.maybeSingle();
 
 	if (error) {
-		console.error('[getPropertyBySlug]', error.message);
+		console.error(`[getPropertyBySlug] Error fetching property for slug "${slug}":`, error.message);
 		return null;
 	}
 

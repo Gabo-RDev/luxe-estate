@@ -10,7 +10,7 @@ interface PageProps {
 }
 
 export default async function PropertyDetailsPage({ params }: PageProps) {
-	const { slug } = params;
+	const { slug } = await params;
 	const property = await getPropertyBySlug(slug);
 
 	if (!property) {
