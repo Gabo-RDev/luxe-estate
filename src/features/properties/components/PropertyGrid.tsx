@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import PropertyCard from './PropertyCard';
 import { Property } from '@/types/Property';
 
@@ -13,22 +12,6 @@ export default function PropertyGrid({
 	properties,
 	currentPage,
 }: PropertyGridProps) {
-	const isFirstRender = useRef(true);
-
-	useEffect(() => {
-		// Skip scroll on the very first mount — user is already at top
-		if (isFirstRender.current) {
-			isFirstRender.current = false;
-			return;
-		}
-
-		// Smooth-scroll to the section header after each page change
-		const section = document.getElementById('new-in-market');
-		if (section) {
-			section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		}
-	}, [currentPage]);
-
 	return (
 		// key forces a full remount → restarts the CSS animation on every page change
 		<div

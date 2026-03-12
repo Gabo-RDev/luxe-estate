@@ -16,6 +16,14 @@ export default function Pagination({
 
 	if (totalPages <= 1) return null;
 
+	const handlePageClick = () => {
+		// Smooth-scroll to the section header after each page change
+		const section = document.getElementById('new-in-market');
+		if (section) {
+			section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	};
+
 	const buildPageUrl = (page: number) => {
 		const params = new URLSearchParams(searchParams.toString());
 		params.set('page', String(page));
@@ -41,6 +49,7 @@ export default function Pagination({
 			{hasPrev ? (
 				<Link
 					href={buildPageUrl(currentPage - 1)}
+					onClick={handlePageClick}
 					scroll={false}
 					className='flex items-center gap-1 px-4 py-2 text-sm font-medium text-nordic border border-nordic/10 rounded-lg hover:border-mosque hover:text-mosque transition-all'
 				>
@@ -68,6 +77,7 @@ export default function Pagination({
 						<Link
 							key={p}
 							href={buildPageUrl(p as number)}
+							onClick={handlePageClick}
 							scroll={false}
 							className={`w-9 h-9 flex items-center justify-center text-sm font-medium rounded-lg transition-all ${
 								p === currentPage
@@ -85,6 +95,7 @@ export default function Pagination({
 			{hasNext ? (
 				<Link
 					href={buildPageUrl(currentPage + 1)}
+					onClick={handlePageClick}
 					scroll={false}
 					className='flex items-center gap-1 px-4 py-2 text-sm font-medium text-nordic border border-nordic/10 rounded-lg hover:border-mosque hover:text-mosque transition-all'
 				>
