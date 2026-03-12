@@ -58,7 +58,7 @@ export default function PropertyMap({ location, lat, lng }: PropertyMapProps) {
 				href={`https://maps.google.com/?q=${encodeURIComponent(location)}`}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="absolute bottom-2 right-2 bg-white/90 text-xs font-medium px-2 py-1 rounded shadow-sm text-nordic hover:text-mosque z-1000"
+				className="absolute bottom-2 right-2 bg-white/90 text-xs font-medium px-2 py-1 rounded shadow-sm text-nordic hover:text-mosque z-[1000]"
 			>
 				View on Map
 			</a>
