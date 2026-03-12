@@ -14,7 +14,8 @@ interface HomeProps {
 
 export default async function Home({ searchParams }: HomeProps) {
 	const params = await searchParams;
-	const currentPage = Math.max(1, Number(params.page ?? 1));
+	const parsedPage = parseInt(params.page ?? '', 10);
+	const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
 
 	// Both calls happen in parallel on the server
 	const [featuredProperties, { data: newProperties, totalPages }] =
