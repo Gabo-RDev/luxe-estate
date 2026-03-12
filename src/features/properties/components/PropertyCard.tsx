@@ -1,4 +1,7 @@
-import { Property } from '@/types/property';
+'use client';
+
+import { Property } from '@/types/Property';
+import Link from 'next/link';
 
 interface PropertyCardProps {
 	property: Property;
@@ -12,7 +15,7 @@ export default function PropertyCard({
 	// If featuredMode is true, we use a larger card style with Hint of Green background for the highlights
 	if (featuredMode) {
 		return (
-			<div className='group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer'>
+			<Link href={`/properties/${property.slug}`} className='group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer block'>
 				<div className='aspect-4/3 w-full overflow-hidden relative'>
 					<img
 						alt={property.title}
@@ -26,7 +29,7 @@ export default function PropertyCard({
 							</div>
 						)}
 					</div>
-					<button className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
+					<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
 						<span className='material-icons text-xl'>favorite_border</span>
 					</button>
 					<div className='absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60'></div>
@@ -62,13 +65,13 @@ export default function PropertyCard({
 						</div>
 					</div>
 				</div>
-			</div>
+			</Link>
 		);
 	}
 
 	// Regular card mode
 	return (
-		<article className='bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col'>
+		<Link href={`/properties/${property.slug}`} className='bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col'>
 			<div className='relative aspect-4/3 overflow-hidden'>
 				<img
 					alt={property.title}
@@ -82,7 +85,7 @@ export default function PropertyCard({
 						</div>
 					)}
 				</div>
-				<button className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all z-10'>
+				<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all z-20'>
 					<span className='material-icons text-xl'>favorite_border</span>
 				</button>
 				<div
@@ -124,6 +127,6 @@ export default function PropertyCard({
 					</div>
 				</div>
 			</div>
-		</article>
+		</Link>
 	);
 }

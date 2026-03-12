@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import PropertyCard from '../PropertyCard';
-import { Property } from '@/types/property';
+import PropertyCard from './PropertyCard';
+import { Property } from '@/types/Property';
 
 interface PropertyGridProps {
 	properties: Property[];

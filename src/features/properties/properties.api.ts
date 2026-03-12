@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { Property } from '@/types/property';
+import { Property } from '@/types/Property';
 
 // Number of non-featured properties shown per page
 export const PAGE_SIZE = 6;
@@ -8,8 +8,9 @@ export const PAGE_SIZE = 6;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToProperty(row: any): Property {
 	return {
-		id: row.slug,
+		id: row.id || row.slug, // fallback if id is not present
 		title: row.title,
+		slug: row.slug,
 		location: row.location,
 		price: Number(row.price),
 		pricePeriod: row.price_period ?? undefined,
@@ -17,10 +18,13 @@ function rowToProperty(row: any): Property {
 		baths: Number(row.baths),
 		area: Number(row.area),
 		imageUrl: row.image_url,
+		images: row.images || [row.image_url],
 		badge: row.badge ?? undefined,
 		listingType: row.listing_type,
 		propertyType: row.property_type,
 		isFeatured: row.is_featured,
+		lat: row.lat ?? undefined,
+		lng: row.lng ?? undefined,
 	};
 }
 
@@ -80,4 +84,22 @@ export async function getProperties(
 		totalPages,
 		currentPage: page,
 	};
+}
+
+/** Fetch a single property by its slug. */
+export async function getPropertyBySlug(slug: string): Promise<Property | null> {
+	const supabase = await createClient();
+
+	const { data, error } = await supabase
+		.from('properties')
+		.select('*')
+		.eq('slug', slug)
+		.single();
+
+	if (error) {
+		console.error('[getPropertyBySlug]', error.message);
+		return null;
+	}
+
+	return data ? rowToProperty(data) : null;
 }
