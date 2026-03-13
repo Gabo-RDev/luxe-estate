@@ -10,8 +10,16 @@ export const MAX_PAGE_SIZE = 100;
 // Map snake_case DB row → camelCase Property interface
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToProperty(row: any): Property {
+	// property_images rows come back as [{ url, order }, ...], sorted by our query
+	const images: string[] =
+		Array.isArray(row.property_images) && row.property_images.length > 0
+			? (row.property_images as { url: string; order: number }[])
+					.sort((a, b) => a.order - b.order)
+					.map((img) => img.url)
+			: [row.image_url];
+
 	return {
-		id: row.id || row.slug, // fallback if id is not present
+		id: row.id || row.slug,
 		title: row.title,
 		slug: row.slug,
 		location: row.location,
@@ -21,7 +29,7 @@ function rowToProperty(row: any): Property {
 		baths: Number(row.baths),
 		area: Number(row.area),
 		imageUrl: row.image_url,
-		images: row.images || [row.image_url],
+		images,
 		badge: row.badge ?? undefined,
 		listingType: row.listing_type,
 		propertyType: row.property_type,
@@ -37,7 +45,7 @@ export async function getFeaturedProperties(): Promise<Property[]> {
 
 	const { data, error } = await supabase
 		.from('properties')
-		.select('*')
+		.select('*, property_images(url, order)')
 		.eq('is_featured', true)
 		.order('created_at', { ascending: true });
 
@@ -77,7 +85,7 @@ export async function getProperties(
 
 	const { data, error, count } = await supabase
 		.from('properties')
-		.select('*', { count: 'exact' })
+		.select('*, property_images(url, order)', { count: 'exact' })
 		.eq('is_featured', false)
 		.order('created_at', { ascending: true })
 		.range(from, to);
@@ -104,7 +112,7 @@ export async function getPropertyBySlug(slug: string): Promise<Property | null> 
 
 	const { data, error } = await supabase
 		.from('properties')
-		.select('*')
+		.select('*, property_images(url, order)')
 		.eq('slug', slug)
 		.maybeSingle();
 

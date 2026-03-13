@@ -1,14 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 export default function Navigation() {
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
 
 	const handleLogoClick = (e: React.MouseEvent) => {
-		// If we are already on the home page, scroll to top smoothly
-		if (pathname === '/') {
+		// If we are already on the home page AND there are no search params, scroll to top smoothly
+		// If there ARE search params (like ?page=2), we want the default Link behavior to navigate to / (resetting params)
+		if (pathname === '/' && !searchParams.toString()) {
 			e.preventDefault();
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
