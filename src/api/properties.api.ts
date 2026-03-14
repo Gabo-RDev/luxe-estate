@@ -64,10 +64,21 @@ export interface PaginatedProperties {
 	currentPage: number;
 }
 
+export interface PropertyFilters {
+	query?: string;
+	propertyType?: string;
+	minPrice?: number;
+	maxPrice?: number;
+	beds?: number;
+	baths?: number;
+	location?: string;
+}
+
 /** Fetch non-featured properties with server-side pagination. */
 export async function getProperties(
 	page: number = 1,
 	pageSize: number = PAGE_SIZE,
+	filters?: PropertyFilters,
 ): Promise<PaginatedProperties> {
 	const supabase = await createClient();
 
@@ -83,10 +94,36 @@ export async function getProperties(
 	const from = (safePage - 1) * safePageSize;
 	const to = from + safePageSize - 1;
 
-	const { data, error, count } = await supabase
+	let query = supabase
 		.from('properties')
 		.select('*, property_images(url, order)', { count: 'exact' })
-		.eq('is_featured', false)
+		.eq('is_featured', false);
+
+	if (filters) {
+		if (filters.query) {
+			query = query.or(`title.ilike.%${filters.query}%,location.ilike.%${filters.query}%`);
+		}
+		if (filters.location) {
+			query = query.ilike('location', `%${filters.location}%`);
+		}
+		if (filters.propertyType && filters.propertyType !== 'Any Type' && filters.propertyType !== 'All') {
+			query = query.eq('property_type', filters.propertyType);
+		}
+		if (filters.minPrice !== undefined) {
+			query = query.gte('price', filters.minPrice);
+		}
+		if (filters.maxPrice !== undefined) {
+			query = query.lte('price', filters.maxPrice);
+		}
+		if (filters.beds && filters.beds > 0) {
+			query = query.gte('beds', filters.beds);
+		}
+		if (filters.baths && filters.baths > 0) {
+			query = query.gte('baths', filters.baths);
+		}
+	}
+
+	const { data, error, count } = await query
 		.order('created_at', { ascending: true })
 		.range(from, to);
 

@@ -1,15 +1,28 @@
 import { Suspense } from 'react';
 import Pagination from '@/components/ui/Pagination';
-import { PropertyGrid, SearchHero, PropertyCard } from '@/features/properties/components';
+import {
+	PropertyGrid,
+	SearchHero,
+	PropertyCard,
+} from '@/features/properties/components';
 import Navigation from '@/components/layout/Navigation';
 import {
 	getFeaturedProperties,
 	getProperties,
 	PAGE_SIZE,
-} from '@/features/properties/properties.api';
+} from '@/api/properties.api';
 
 interface HomeProps {
-	searchParams: Promise<{ page?: string }>;
+	searchParams: Promise<{
+		page?: string;
+		query?: string;
+		propertyType?: string;
+		minPrice?: string;
+		maxPrice?: string;
+		beds?: string;
+		baths?: string;
+		location?: string;
+	}>;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
@@ -17,11 +30,21 @@ export default async function Home({ searchParams }: HomeProps) {
 	const parsedPage = parseInt(params.page ?? '', 10);
 	const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
 
+	const filters = {
+		query: params.query,
+		propertyType: params.propertyType,
+		minPrice: params.minPrice ? parseInt(params.minPrice, 10) : undefined,
+		maxPrice: params.maxPrice ? parseInt(params.maxPrice, 10) : undefined,
+		beds: params.beds ? parseInt(params.beds, 10) : undefined,
+		baths: params.baths ? parseInt(params.baths, 10) : undefined,
+		location: params.location,
+	};
+
 	// Both calls happen in parallel on the server
 	const [featuredProperties, { data: newProperties, totalPages }] =
 		await Promise.all([
 			getFeaturedProperties(),
-			getProperties(currentPage, PAGE_SIZE),
+			getProperties(currentPage, PAGE_SIZE, filters),
 		]);
 
 	return (

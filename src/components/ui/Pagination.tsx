@@ -34,14 +34,14 @@ export default function Pagination({
 	const hasNext = currentPage < totalPages;
 
 	// Build a compact window of page numbers
-	const pageNumbers: (number | '…')[] = [];
-	for (let i = 1; i <= totalPages; i++) {
-		if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
-			pageNumbers.push(i);
-		} else if (pageNumbers[pageNumbers.length - 1] !== '…') {
-			pageNumbers.push('…');
-		}
-	}
+	const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
+		.filter(
+			(page) =>
+				page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1,
+		)
+		.flatMap((page, idx, arr) =>
+			idx > 0 && page - arr[idx - 1] > 1 ? (['…', page] as const) : [page],
+		);
 
 	return (
 		<div className='mt-12 flex items-center justify-center gap-2'>
