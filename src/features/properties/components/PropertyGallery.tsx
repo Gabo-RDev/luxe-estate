@@ -17,8 +17,8 @@ export default function PropertyGallery({
 	imageUrl,
 }: PropertyGalleryProps) {
 	// Use images array if populated, otherwise fall back to single imageUrl
-	const displayImages =
-		images && images.length > 0 ? images : imageUrl ? [imageUrl] : [];
+	const galleryFallback = imageUrl ? [imageUrl] : [];
+	const displayImages = images.length > 0 ? images : galleryFallback;
 
 	const [activeIndex, setActiveIndex] = useState(0);
 

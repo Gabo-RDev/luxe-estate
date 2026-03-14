@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getPropertyBySlug } from '@/features/properties/properties.api';
+import { getPropertyBySlug } from '@/api/properties.api';
 import Navigation from '@/components/layout/Navigation';
 import Image from 'next/image';
 import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
