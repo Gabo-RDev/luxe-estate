@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export const CATEGORIES = [
-	'All',
-	'House',
-	'Apartment',
-	'Villa',
-	'Penthouse',
+	'all',
+	'house',
+	'apartment',
+	'villa',
+	'penthouse',
 ] as const;
 
 export function useSearchFilters() {
@@ -16,11 +16,11 @@ export function useSearchFilters() {
 	const searchParams = useSearchParams();
 
 	// 1. DERIVED STATE: No useState/useEffect needed (Rule 1 & 3)
-	const urlCategory = searchParams.get('propertyType');
+	const urlCategory = searchParams.get('type');
 	const selectedCategory =
-		urlCategory && (CATEGORIES as readonly string[]).includes(urlCategory)
-			? urlCategory
-			: 'All';
+		urlCategory
+			? CATEGORIES.find((c) => c === urlCategory.toLowerCase()) || 'all'
+			: 'all';
 
 	// 2. LOCAL DRAFT STATE: For typing (Rule 2: User interaction)
 	const [searchQuery, setSearchQuery] = useState(
@@ -39,12 +39,12 @@ export function useSearchFilters() {
 	const handleCategoryClick = (category: string) => {
 		const params = new URLSearchParams(searchParams.toString());
 
-		category === 'All' || category === 'Any Type'
-			? params.delete('propertyType')
-			: params.set('propertyType', category);
+		category === 'all' || category === 'any type'
+			? params.delete('type')
+			: params.set('type', category);
 
 		params.delete('page');
-		router.push(`/?${params.toString()}`, { scroll: false });
+		router.push(`/properties?${params.toString()}`, { scroll: false });
 	};
 
 	const handleSearchSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -56,7 +56,7 @@ export function useSearchFilters() {
 			: params.delete('query');
 
 		params.delete('page');
-		router.push(`/?${params.toString()}`, { scroll: false });
+		router.push(`/properties?${params.toString()}`, { scroll: false });
 	};
 
 	return {

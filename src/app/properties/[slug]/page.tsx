@@ -4,17 +4,38 @@ import Navigation from '@/components/layout/Navigation';
 import Image from 'next/image';
 import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
+import PropertiesPage from '../page';
 
 interface PageProps {
-	params: { slug: string };
+	params: Promise<{ slug: string }>;
+	searchParams: Promise<{
+		page?: string;
+		query?: string;
+		type?: string;
+		minPrice?: string;
+		maxPrice?: string;
+		beds?: string;
+		baths?: string;
+	}>;
 }
 
-export default async function PropertyDetailsPage({ params }: PageProps) {
+export default async function PropertyDetailsPage({ params, searchParams }: PageProps) {
 	const { slug } = await params;
 	const property = await getPropertyBySlug(slug);
 
 	if (!property) {
-		notFound();
+		// If no property is found by this slug, we assume it's a location route
+		// e.g. /properties/punta-cana
+		// We format 'punta-cana' to 'punta cana' for the database ilike search
+		const locationStr = slug.replace(/-/g, ' ');
+		const queryParams = await searchParams;
+		
+		const combinedParams = Promise.resolve({
+			...queryParams,
+			location: locationStr,
+		});
+
+		return <PropertiesPage searchParams={combinedParams} />;
 	}
 
 	return (

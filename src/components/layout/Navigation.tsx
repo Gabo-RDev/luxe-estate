@@ -35,8 +35,12 @@ export default function Navigation() {
 
 					<div className='hidden md:flex items-center space-x-8'>
 						<Link
-							className='text-mosque font-medium text-sm border-b-2 border-mosque px-1 py-1'
-							href='/'
+							className={`font-medium text-sm px-1 py-1 transition-all ${
+								pathname.startsWith('/properties')
+									? 'text-mosque border-b-2 border-mosque'
+									: 'text-nordic/70 hover:text-nordic hover:border-b-2 hover:border-nordic/20 border-b-2 border-transparent'
+							}`}
+							href='/properties'
 						>
 							Buy
 						</Link>
