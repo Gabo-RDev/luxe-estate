@@ -106,7 +106,7 @@ export async function getProperties(
 		if (filters.location) {
 			query = query.ilike('location', `%${filters.location}%`);
 		}
-		if (filters.propertyType && filters.propertyType !== 'Any Type' && filters.propertyType !== 'All') {
+		if (filters.propertyType && filters.propertyType !== 'any type' && filters.propertyType !== 'all') {
 			query = query.eq('property_type', filters.propertyType);
 		}
 		if (filters.minPrice !== undefined) {

@@ -9,7 +9,7 @@ export const FILTERS_DEFAULTS = {
 	location: 'San Francisco',
 	minPrice: 1200000,
 	maxPrice: 4500000,
-	propertyType: 'Any Type',
+	propertyType: 'all',
 	beds: 2,
 	baths: 1,
 	amenities: ['pool', 'wifi'],

@@ -51,7 +51,7 @@ export default function SearchHero() {
 						<button
 							key={cat}
 							onClick={() => handleCategoryClick(cat)}
-							className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
+							className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer capitalize ${
 								selectedCategory === cat
 									? 'bg-nordic text-white shadow-lg'
 									: 'bg-white border border-nordic/10 text-nordic/70 hover:text-nordic hover:border-mosque/50'

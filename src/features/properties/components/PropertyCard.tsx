@@ -2,6 +2,7 @@
 
 import { Property } from '@/types/Property';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface PropertyCardProps {
 	property: Property;
@@ -17,10 +18,12 @@ export default function PropertyCard({
 		return (
 			<Link href={`/properties/${property.slug}`} className='group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer block'>
 				<div className='aspect-4/3 w-full overflow-hidden relative'>
-					<img
+					<Image
 						alt={property.title}
 						className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-105'
 						src={property.imageUrl}
+						fill
+						sizes='(max-width: 1024px) 100vw, 50vw'
 					/>
 					<div className='absolute top-4 left-4 flex gap-2 z-10'>
 						{property.isFeatured && (
@@ -73,10 +76,12 @@ export default function PropertyCard({
 	return (
 		<Link href={`/properties/${property.slug}`} className='bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col'>
 			<div className='relative aspect-4/3 overflow-hidden'>
-				<img
+				<Image
 					alt={property.title}
 					className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
 					src={property.imageUrl}
+					fill
+					sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
 				/>
 				<div className='absolute top-4 left-4 flex flex-col gap-2 items-start z-10'>
 					{property.isFeatured && (
