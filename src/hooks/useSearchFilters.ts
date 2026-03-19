@@ -3,13 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export const CATEGORIES = [
-	'all',
-	'house',
-	'apartment',
-	'villa',
-	'penthouse',
-] as const;
+import { CATEGORIES } from '@/lib/constants';
 
 export function useSearchFilters() {
 	const router = useRouter();

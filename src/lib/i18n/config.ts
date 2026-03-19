@@ -1,4 +1,4 @@
-export type Locale = 'es' | 'en' | 'fr';
+import { Locale } from '@/types/I18n';
 
 export const defaultLocale: Locale = 'es';
 
@@ -9,3 +9,10 @@ export const localeNames: Record<Locale, string> = {
   en: 'English',
   fr: 'Français'
 };
+
+export const localeFlags: Record<Locale, string> = {
+  es: '🇪🇸',
+  en: '🇺🇸',
+  fr: '🇫🇷',
+};
+

@@ -1,5 +1,5 @@
-import { PRICE_BOUNDS } from '@/features/properties/filtersConfig';
-import { FiltersState } from '@/reducers/filtersReducer';
+import { PRICE_BOUNDS } from '@/lib/constants';
+import { FiltersState } from '@/types/Filters';
 
 /**
  * Maps current state to a clean object for URLSearchParams.
@@ -12,7 +12,7 @@ export const mapFiltersToParams = (state: FiltersState) => {
 		location: location || null,
 		minPrice: minPrice > PRICE_BOUNDS.MIN ? minPrice.toString() : null,
 		maxPrice: maxPrice < PRICE_BOUNDS.MAX ? maxPrice.toString() : null,
-		type: propertyType && propertyType !== 'Any Type' ? propertyType.toLowerCase() : null,
+		type: propertyType && propertyType !== 'all' ? propertyType.toLowerCase() : null,
 		beds: beds > 0 ? beds.toString() : null,
 		baths: baths > 0 ? baths.toString() : null,
 	};

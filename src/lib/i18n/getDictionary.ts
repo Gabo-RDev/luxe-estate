@@ -1,7 +1,7 @@
 import 'server-only';
-import { Locale } from './config';
+import { Locale } from '@/types/I18n';
 
-const dictionaries = {
+const dictionaries: Record<Locale, () => Promise<any>> = {
   es: () => import('./dictionaries/es.json').then((module) => module.default),
   en: () => import('./dictionaries/en.json').then((module) => module.default),
   fr: () => import('./dictionaries/fr.json').then((module) => module.default),
@@ -14,4 +14,4 @@ export const getDictionary = async (locale: Locale) => {
   return dictionaries.es();
 };
 
-export type Dictionary = Awaited<ReturnType<typeof getDictionary>>;
+

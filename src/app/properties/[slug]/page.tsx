@@ -6,24 +6,13 @@ import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 import PropertiesPage from '../page';
 import { cookies } from 'next/headers';
-import { Locale } from '@/lib/i18n/config';
+import { Locale } from '@/types/I18n';
 import { getDictionary } from '@/lib/i18n/getDictionary';
-import { Property } from '@/types/Property';
+import { Property } from '@/interfaces/Property.interface';
 
-interface PageProps {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{
-		page?: string;
-		query?: string;
-		type?: string;
-		minPrice?: string;
-		maxPrice?: string;
-		beds?: string;
-		baths?: string;
-	}>;
-}
+import { PropertyDetailsPageProps } from '@/interfaces/PropertyDetailsPageProps.interface';
 
-export default async function PropertyDetailsPage({ params, searchParams }: PageProps) {
+export default async function PropertyDetailsPage({ params, searchParams }: PropertyDetailsPageProps) {
 	const { slug } = await params;
 	const property = await getPropertyBySlug(slug);
 
@@ -217,7 +206,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										<span className='material-icons text-mosque/60 text-sm'>
 											check_circle
 										</span>
-										<span>{amenity}</span>
+										<span>{amenity as string}</span>
 									</div>
 								))}
 							</div>
