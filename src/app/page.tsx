@@ -11,6 +11,9 @@ import {
 	PAGE_SIZE,
 	PropertyFilters,
 } from '@/api/properties.api';
+import { cookies } from 'next/headers';
+import { getDictionary } from '@/lib/i18n/getDictionary';
+import { defaultLocale, Locale, locales } from '@/lib/i18n/config';
 
 interface HomeProps {
 	searchParams: Promise<{
@@ -63,6 +66,11 @@ export default async function Home({ searchParams }: HomeProps) {
 	const parsedPage = parseInt(params.page ?? '', 10);
 	const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
 
+	const cookieStore = await cookies();
+	const localeCookie = cookieStore.get("NEXT_LOCALE")?.value as Locale;
+	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
+	const dictionary = await getDictionary(locale);
+
 	const filters = {
 		query: params.query,
 		propertyType: params.type?.toLowerCase(),
@@ -103,17 +111,17 @@ export default async function Home({ searchParams }: HomeProps) {
 						<div className='flex items-end justify-between mb-8'>
 							<div>
 								<h2 className='text-2xl font-light text-nordic'>
-									Featured Collections
+									{dictionary.home.featured_collections}
 								</h2>
 								<p className='text-nordic/70 mt-1 text-sm'>
-									Curated properties for the discerning eye.
+									{dictionary.home.curated_properties}
 								</p>
 							</div>
 							<a
 								className='hidden sm:flex items-center gap-1 text-sm font-medium text-mosque hover:opacity-70 transition-opacity'
 								href='#'
 							>
-								View all{' '}
+								{dictionary.home.view_all}{' '}
 								<span className='material-icons text-sm'>arrow_forward</span>
 							</a>
 						</div>
@@ -134,20 +142,20 @@ export default async function Home({ searchParams }: HomeProps) {
 				<section id='new-in-market'>
 					<div className='flex items-end justify-between mb-8'>
 						<div>
-							<h2 className='text-2xl font-light text-nordic'>New in Market</h2>
+							<h2 className='text-2xl font-light text-nordic'>{dictionary.home.new_in_market}</h2>
 							<p className='text-nordic/70 mt-1 text-sm'>
-								Fresh opportunities added this week.
+								{dictionary.home.fresh_opportunities}
 							</p>
 						</div>
 						<div className='hidden md:flex bg-white p-1 rounded-lg shadow-sm border border-nordic/5'>
 							<button className='px-4 py-1.5 rounded-md text-sm font-medium bg-nordic text-white'>
-								All
+								{dictionary.home.all}
 							</button>
 							<button className='px-4 py-1.5 rounded-md text-sm font-medium text-nordic/70 hover:text-nordic'>
-								Buy
+								{dictionary.home.buy}
 							</button>
 							<button className='px-4 py-1.5 rounded-md text-sm font-medium text-nordic/70 hover:text-nordic'>
-								Rent
+								{dictionary.home.rent}
 							</button>
 						</div>
 					</div>
