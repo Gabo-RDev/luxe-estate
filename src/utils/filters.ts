@@ -12,7 +12,7 @@ export const mapFiltersToParams = (state: FiltersState) => {
 		location: location || null,
 		minPrice: minPrice > PRICE_BOUNDS.MIN ? minPrice.toString() : null,
 		maxPrice: maxPrice < PRICE_BOUNDS.MAX ? maxPrice.toString() : null,
-		propertyType: propertyType && propertyType !== 'Any Type' ? propertyType : null,
+		type: propertyType && propertyType !== 'Any Type' ? propertyType.toLowerCase() : null,
 		beds: beds > 0 ? beds.toString() : null,
 		baths: baths > 0 ? baths.toString() : null,
 	};
@@ -25,7 +25,7 @@ export const getInitialFilters = (
 	searchParams: URLSearchParams,
 	defaults: FiltersState,
 ): FiltersState => {
-	const propertyType = searchParams.get('propertyType');
+	const type = searchParams.get('type') || searchParams.get('propertyType');
 	const minPrice = searchParams.get('minPrice');
 	const maxPrice = searchParams.get('maxPrice');
 	const beds = searchParams.get('beds');
@@ -37,7 +37,7 @@ export const getInitialFilters = (
 		location: location || defaults.location,
 		minPrice: minPrice ? parseInt(minPrice, 10) : defaults.minPrice,
 		maxPrice: maxPrice ? parseInt(maxPrice, 10) : defaults.maxPrice,
-		propertyType: propertyType || defaults.propertyType,
+		propertyType: type?.toLowerCase() || defaults.propertyType,
 		beds: beds ? parseInt(beds, 10) : defaults.beds,
 		baths: baths ? parseInt(baths, 10) : defaults.baths,
 	};

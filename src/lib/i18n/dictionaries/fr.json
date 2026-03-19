@@ -1,0 +1,94 @@
+{
+	"common": {
+		"language": "Langue",
+		"search": "Chercher",
+		"properties": "Propriétés",
+		"contact": "Contact",
+		"prev": "Précédent",
+		"next": "Suivant"
+	},
+	"nav": {
+		"buy": "Acheter",
+		"rent": "Louer",
+		"sell": "Vendre",
+		"saved": "Maisons Sauvegardées"
+	},
+	"home": {
+		"title": "Trouvez la maison de vos rêves",
+		"subtitle": "Découvrez les propriétés les plus exclusives et luxueuses.",
+		"featured_collections": "Collections en vedette",
+		"curated_properties": "Des propriétés sélectionnées pour les plus exigeants.",
+		"view_all": "Voir tout",
+		"new_in_market": "Nouveautés sur le marché",
+		"fresh_opportunities": "Nouvelles opportunités ajoutées cette semaine.",
+		"all": "Tout",
+		"buy": "Acheter",
+		"rent": "Louer"
+	},
+	"categories": {
+		"all": "Tout",
+		"house": "Maison",
+		"apartment": "Appartement",
+		"villa": "Villa",
+		"penthouse": "Penthouse"
+	},
+	"search_hero": {
+		"find_your": "Trouvez votre ",
+		"sanctuary": "sanctuaire",
+		"placeholder": "Chercher ville, quartier ou adresse...",
+		"search": "Chercher",
+		"filters": "Filtres"
+	},
+	"property_card": {
+		"exclusive": "Exclusif",
+		"for": "À",
+		"buy": "VENDRE",
+		"rent": "LOUER",
+		"sale": "VENDRE",
+		"beds": "Lits",
+		"baths": "Bains"
+	},
+	"filters": {
+		"title": "Filtres",
+		"location": "Emplacement",
+		"location_placeholder": "Ville, quartier ou adresse",
+		"price_range": "Gamme de Prix",
+		"min_price": "Prix Min",
+		"max_price": "Prix Max",
+		"property_type": "Type de Propriété",
+		"any_type": "N'importe quel type",
+		"bedrooms": "Chambres",
+		"bathrooms": "Salles de Bain",
+		"any": "N'importe",
+		"amenities": "Commodités et Caractéristiques",
+		"clear_all": "Effacer tous les filtres",
+		"show_homes": "Afficher les Maisons"
+	},
+	"property_details": {
+		"top_rated_agent": "Agent le Mieux Noté",
+		"schedule_visit": "Planifier une Visite",
+		"contact_agent": "Contacter l'Agent",
+		"features": "Caractéristiques de la Propriété",
+		"square_meters": "Mètres Carrés",
+		"bedrooms": "Chambres",
+		"bathrooms": "Salles de Bain",
+		"garage": "Garage",
+		"about": "À propos de cette maison",
+		"desc_1": "Découvrez le luxe moderne de {title} situé à {location}. Conçue en mettant l'accent sur la vie intérieur-extérieur, la résidence dispose de murs de verre du sol au plafond qui inondent les intérieurs de lumière naturelle.",
+		"desc_2": "La cuisine à aire ouverte est équipée d'appareils haut de gamme et d'armoires sur mesure, parfaites pour les passionnés de cuisine. Retirez-vous dans la suite principale, un sanctuaire de détente avec une salle de bain inspirée du spa et un balcon privé.",
+		"read_more": "Lire la suite",
+		"amenities": "Commodités",
+		"amenities_list": {
+			"smart_home": "Système de Maison Intelligente",
+			"pool": "Piscine",
+			"hvac": "Chauffage et Climatisation Centraux",
+			"ev": "Recharge de Véhicule Électrique",
+			"gym": "Gymnase Privé",
+			"wine_cellar": "Cave à Vin"
+		},
+		"estimated_payment": "Paiement Estimé",
+		"starting_from": "À partir de",
+		"with_down": "avec 20% d'acompte",
+		"calculate_mortgage": "Calculer l'Hypothèque"
+	}
+}

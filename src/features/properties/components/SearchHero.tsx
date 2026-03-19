@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import FiltersModal from '@/features/properties/components/FiltersModal';
 import { useSearchFilters } from '@/hooks/useSearchFilters';
+import { useI18n } from '@/lib/i18n/i18n-context';
 
 export default function SearchHero() {
+	const { dictionary } = useI18n();
 	const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 	const {
 		selectedCategory,
@@ -19,9 +21,9 @@ export default function SearchHero() {
 		<section className='py-12 md:py-16'>
 			<div className='max-w-3xl mx-auto text-center space-y-8'>
 				<h1 className='text-4xl md:text-5xl lg:text-6xl font-light text-nordic leading-tight'>
-					Find your{' '}
+					{dictionary.search_hero.find_your}
 					<span className='relative inline-block'>
-						<span className='relative z-10 font-medium'>sanctuary</span>
+						<span className='relative z-10 font-medium'>{dictionary.search_hero.sanctuary}</span>
 						<span className='absolute bottom-2 left-0 w-full h-3 bg-mosque/20 -rotate-1 z-0'></span>
 					</span>
 					.
@@ -36,13 +38,13 @@ export default function SearchHero() {
 					<input
 						suppressHydrationWarning
 						type='text'
-						placeholder='Search city, neighborhood, or address...'
+						placeholder={dictionary.search_hero.placeholder}
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 						className='block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white text-nordic shadow-sm placeholder-nordic/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg'
 					/>
 					<button type='submit' className='absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20'>
-						Search
+						{dictionary.search_hero.search}
 					</button>
 				</form>
 
@@ -51,13 +53,13 @@ export default function SearchHero() {
 						<button
 							key={cat}
 							onClick={() => handleCategoryClick(cat)}
-							className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${
+							className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer capitalize ${
 								selectedCategory === cat
 									? 'bg-nordic text-white shadow-lg'
 									: 'bg-white border border-nordic/10 text-nordic/70 hover:text-nordic hover:border-mosque/50'
 							}`}
 						>
-							{cat}
+							{dictionary.categories[cat as keyof typeof dictionary.categories]}
 						</button>
 					))}
 					<div className='w-px h-6 bg-nordic/10 mx-2'></div>
@@ -65,7 +67,7 @@ export default function SearchHero() {
 						onClick={() => setIsFiltersModalOpen(true)}
 						className='whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic font-medium text-sm hover:bg-white/50 transition-colors cursor-pointer'
 					>
-						<span className='material-icons text-base'>tune</span> Filters
+						<span className='material-icons text-base'>tune</span> {dictionary.search_hero.filters}
 					</button>
 				</div>
 			</div>

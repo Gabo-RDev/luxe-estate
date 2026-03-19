@@ -21,8 +21,12 @@ function rowToProperty(row: any): Property {
 	return {
 		id: row.id || row.slug,
 		title: row.title,
+		title_es: row.title_es ?? undefined,
+		title_fr: row.title_fr ?? undefined,
 		slug: row.slug,
 		location: row.location,
+		location_es: row.location_es ?? undefined,
+		location_fr: row.location_fr ?? undefined,
 		price: Number(row.price),
 		pricePeriod: row.price_period ?? undefined,
 		beds: Number(row.beds),
@@ -106,7 +110,7 @@ export async function getProperties(
 		if (filters.location) {
 			query = query.ilike('location', `%${filters.location}%`);
 		}
-		if (filters.propertyType && filters.propertyType !== 'Any Type' && filters.propertyType !== 'All') {
+		if (filters.propertyType && filters.propertyType !== 'any type' && filters.propertyType !== 'all') {
 			query = query.eq('property_type', filters.propertyType);
 		}
 		if (filters.minPrice !== undefined) {

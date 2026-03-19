@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useI18n } from '@/lib/i18n/i18n-context';
 
 interface PaginationProps {
 	currentPage: number;
@@ -13,6 +14,7 @@ export default function Pagination({
 	totalPages,
 }: PaginationProps) {
 	const searchParams = useSearchParams();
+	const { dictionary } = useI18n();
 
 	if (totalPages <= 1) return null;
 
@@ -54,12 +56,12 @@ export default function Pagination({
 					className='flex items-center gap-1 px-4 py-2 text-sm font-medium text-nordic border border-nordic/10 rounded-lg hover:border-mosque hover:text-mosque transition-all'
 				>
 					<span className='material-icons text-sm'>arrow_back</span>
-					Prev
+					{dictionary.common.prev}
 				</Link>
 			) : (
 				<span className='flex items-center gap-1 px-4 py-2 text-sm font-medium text-nordic/30 border border-nordic/5 rounded-lg cursor-not-allowed select-none'>
 					<span className='material-icons text-sm'>arrow_back</span>
-					Prev
+					{dictionary.common.prev}
 				</span>
 			)}
 
@@ -99,12 +101,12 @@ export default function Pagination({
 					scroll={false}
 					className='flex items-center gap-1 px-4 py-2 text-sm font-medium text-nordic border border-nordic/10 rounded-lg hover:border-mosque hover:text-mosque transition-all'
 				>
-					Next
+					{dictionary.common.next}
 					<span className='material-icons text-sm'>arrow_forward</span>
 				</Link>
 			) : (
 				<span className='flex items-center gap-1 px-4 py-2 text-sm font-medium text-nordic/30 border border-nordic/5 rounded-lg cursor-not-allowed select-none'>
-					Next
+					{dictionary.common.next}
 					<span className='material-icons text-sm'>arrow_forward</span>
 				</span>
 			)}
