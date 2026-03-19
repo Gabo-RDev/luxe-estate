@@ -3,13 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export const CATEGORIES = [
-	'all',
-	'house',
-	'apartment',
-	'villa',
-	'penthouse',
-] as const;
+import { CATEGORIES } from '@/lib/constants';
 
 export function useSearchFilters() {
 	const router = useRouter();
@@ -17,10 +11,9 @@ export function useSearchFilters() {
 
 	// 1. DERIVED STATE: No useState/useEffect needed (Rule 1 & 3)
 	const urlCategory = searchParams.get('type');
-	const selectedCategory =
-		urlCategory
-			? CATEGORIES.find((c) => c === urlCategory.toLowerCase()) || 'all'
-			: 'all';
+	const selectedCategory = urlCategory
+		? CATEGORIES.find((c) => c === urlCategory.toLowerCase()) || 'all'
+		: 'all';
 
 	// 2. LOCAL DRAFT STATE: For typing (Rule 2: User interaction)
 	const [searchQuery, setSearchQuery] = useState(

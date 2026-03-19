@@ -3,11 +3,8 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n/i18n-context';
-
-interface PaginationProps {
-	currentPage: number;
-	totalPages: number;
-}
+import { buildPageNumbers } from '@/utils/pagination';
+import { PaginationProps } from '@/interfaces/PaginationProps.interface';
 
 export default function Pagination({
 	currentPage,
@@ -36,14 +33,7 @@ export default function Pagination({
 	const hasNext = currentPage < totalPages;
 
 	// Build a compact window of page numbers
-	const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
-		.filter(
-			(page) =>
-				page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1,
-		)
-		.flatMap((page, idx, arr) =>
-			idx > 0 && page - arr[idx - 1] > 1 ? (['…', page] as const) : [page],
-		);
+	const pageNumbers = buildPageNumbers(currentPage, totalPages);
 
 	return (
 		<div className='mt-12 flex items-center justify-center gap-2'>

@@ -6,24 +6,16 @@ import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 import PropertiesPage from '../page';
 import { cookies } from 'next/headers';
-import { Locale } from '@/lib/i18n/config';
+import { Locale } from '@/types/I18n';
 import { getDictionary } from '@/lib/i18n/getDictionary';
-import { Property } from '@/types/Property';
+import { Property } from '@/interfaces/Property.interface';
 
-interface PageProps {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{
-		page?: string;
-		query?: string;
-		type?: string;
-		minPrice?: string;
-		maxPrice?: string;
-		beds?: string;
-		baths?: string;
-	}>;
-}
+import { PropertyDetailsPageProps } from '@/interfaces/PropertyDetailsPageProps.interface';
 
-export default async function PropertyDetailsPage({ params, searchParams }: PageProps) {
+export default async function PropertyDetailsPage({
+	params,
+	searchParams,
+}: PropertyDetailsPageProps) {
 	const { slug } = await params;
 	const property = await getPropertyBySlug(slug);
 
@@ -37,7 +29,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 		// We format 'punta-cana' to 'punta cana' for the database ilike search
 		const locationStr = slug.replace(/-/g, ' ');
 		const queryParams = await searchParams;
-		
+
 		const combinedParams = Promise.resolve({
 			...queryParams,
 			location: locationStr,
@@ -46,8 +38,11 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 		return <PropertiesPage searchParams={combinedParams} />;
 	}
 
-	const localizedTitle = property[`title_${locale}` as keyof Property] as string || property.title;
-	const localizedLocation = property[`location_${locale}` as keyof Property] as string || property.location;
+	const localizedTitle =
+		(property[`title_${locale}` as keyof Property] as string) || property.title;
+	const localizedLocation =
+		(property[`location_${locale}` as keyof Property] as string) ||
+		property.location;
 
 	return (
 		<div className='bg-clear-day min-h-screen text-nordic selection:bg-mosque/20'>
@@ -192,11 +187,11 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 							</h2>
 							<div className='prose prose-slate max-w-none text-nordic/70 leading-relaxed'>
 								<p className='mb-4'>
-									{dictionary.property_details.desc_1.replace('{title}', localizedTitle).replace('{location}', localizedLocation)}
+									{dictionary.property_details.desc_1
+										.replace('{title}', localizedTitle)
+										.replace('{location}', localizedLocation)}
 								</p>
-								<p>
-									{dictionary.property_details.desc_2}
-								</p>
+								<p>{dictionary.property_details.desc_2}</p>
 							</div>
 							<button className='mt-4 text-mosque font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all'>
 								{dictionary.property_details.read_more}
@@ -209,17 +204,19 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 								{dictionary.property_details.amenities}
 							</h2>
 							<div className='grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8'>
-								{Object.values(dictionary.property_details.amenities_list).map((amenity, i) => (
-									<div
-										key={i}
-										className='flex items-center gap-3 text-nordic/70'
-									>
-										<span className='material-icons text-mosque/60 text-sm'>
-											check_circle
-										</span>
-										<span>{amenity}</span>
-									</div>
-								))}
+								{Object.values(dictionary.property_details.amenities_list).map(
+									(amenity, i) => (
+										<div
+											key={i}
+											className='flex items-center gap-3 text-nordic/70'
+										>
+											<span className='material-icons text-mosque/60 text-sm'>
+												check_circle
+											</span>
+											<span>{amenity as string}</span>
+										</div>
+									),
+								)}
 							</div>
 						</div>
 

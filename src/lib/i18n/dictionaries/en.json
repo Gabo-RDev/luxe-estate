@@ -1,94 +1,108 @@
 {
-  "common": {
-    "language": "Language",
-    "search": "Search",
-    "properties": "Properties",
-    "contact": "Contact",
-    "prev": "Prev",
-    "next": "Next"
-  },
-  "nav": {
-    "buy": "Buy",
-    "rent": "Rent",
-    "sell": "Sell",
-    "saved": "Saved Homes"
-  },
-  "home": {
-    "title": "Find your dream home",
-    "subtitle": "Discover the most exclusive and luxurious properties.",
-    "featured_collections": "Featured Collections",
-    "curated_properties": "Curated properties for the discerning eye.",
-    "view_all": "View all",
-    "new_in_market": "New in Market",
-    "fresh_opportunities": "Fresh opportunities added this week.",
-    "all": "All",
-    "buy": "Buy",
-    "rent": "Rent"
-  },
-  "categories": {
-    "all": "All",
-    "house": "House",
-    "apartment": "Apartment",
-    "villa": "Villa",
-    "penthouse": "Penthouse"
-  },
-  "search_hero": {
-    "find_your": "Find your ",
-    "sanctuary": "sanctuary",
-    "placeholder": "Search city, neighborhood, or address...",
-    "search": "Search",
-    "filters": "Filters"
-  },
-  "property_card": {
-    "exclusive": "Exclusive",
-    "for": "FOR",
-    "buy": "SALE",
-    "rent": "RENT",
-    "sale": "SALE",
-    "beds": "Beds",
-    "baths": "Baths"
-  },
-  "filters": {
-    "title": "Filters",
-    "location": "Location",
-    "location_placeholder": "City, neighborhood, or address",
-    "price_range": "Price Range",
-    "min_price": "Min Price",
-    "max_price": "Max Price",
-    "property_type": "Property Type",
-    "any_type": "Any Type",
-    "bedrooms": "Bedrooms",
-    "bathrooms": "Bathrooms",
-    "any": "Any",
-    "amenities": "Amenities & Features",
-    "clear_all": "Clear all filters",
-    "show_homes": "Show Homes"
-  },
-  "property_details": {
-    "top_rated_agent": "Top Rated Agent",
-    "schedule_visit": "Schedule Visit",
-    "contact_agent": "Contact Agent",
-    "features": "Property Features",
-    "square_meters": "Square Meters",
-    "bedrooms": "Bedrooms",
-    "bathrooms": "Bathrooms",
-    "garage": "Garage",
-    "about": "About this home",
-    "desc_1": "Experience modern luxury in {title} located in {location}. Designed with an emphasis on indoor-outdoor living, the residence features floor-to-ceiling glass walls that flood the interiors with natural light.",
-    "desc_2": "The open-concept kitchen is equipped with top-of-the-line appliances and custom cabinetry, perfect for culinary enthusiasts. Retreat to the primary suite, a sanctuary of relaxation with a spa-inspired bath and private balcony.",
-    "read_more": "Read more",
-    "amenities": "Amenities",
-    "amenities_list": {
-      "smart_home": "Smart Home System",
-      "pool": "Swimming Pool",
-      "hvac": "Central Heating & Cooling",
-      "ev": "Electric Vehicle Charging",
-      "gym": "Private Gym",
-      "wine_cellar": "Wine Cellar"
-    },
-    "estimated_payment": "Estimated Payment",
-    "starting_from": "Starting from",
-    "with_down": "with 20% down",
-    "calculate_mortgage": "Calculate Mortgage"
-  }
+	"common": {
+		"language": "Language",
+		"search": "Search",
+		"properties": "Properties",
+		"contact": "Contact",
+		"prev": "Prev",
+		"next": "Next"
+	},
+	"nav": {
+		"buy": "Buy",
+		"rent": "Rent",
+		"sell": "Sell",
+		"saved": "Saved Homes"
+	},
+	"amenities": {
+		"pool": "Pool",
+		"wifi": "Wi-Fi",
+		"gym": "Gym",
+		"parking": "Parking",
+		"security": "Security",
+		"garden": "Garden"
+	},
+	"properties_page": {
+		"title": "All Properties",
+		"description": "Discover our exclusive selection of luxury real estate properties around the world."
+	},
+	"home": {
+		"title": "Find your dream home",
+		"subtitle": "Discover the most exclusive and luxurious properties.",
+		"featured_collections": "Featured Collections",
+		"curated_properties": "Curated properties for the discerning eye.",
+		"view_all": "View all",
+		"new_in_market": "New in Market",
+		"fresh_opportunities": "Fresh opportunities added this week.",
+		"all": "All",
+		"buy": "Buy",
+		"rent": "Rent"
+	},
+	"categories": {
+		"all": "All",
+		"house": "House",
+		"apartment": "Apartment",
+		"villa": "Villa",
+		"penthouse": "Penthouse",
+		"condo": "Condo",
+		"townhouse": "Townhouse"
+	},
+	"search_hero": {
+		"find_your": "Find your ",
+		"sanctuary": "sanctuary",
+		"placeholder": "Search city, neighborhood, or address...",
+		"search": "Search",
+		"filters": "Filters"
+	},
+	"property_card": {
+		"exclusive": "Exclusive",
+		"for": "FOR",
+		"buy": "SALE",
+		"rent": "RENT",
+		"sale": "SALE",
+		"beds": "Beds",
+		"baths": "Baths"
+	},
+	"filters": {
+		"title": "Filters",
+		"location": "Location",
+		"location_placeholder": "City, neighborhood, or address",
+		"price_range": "Price Range",
+		"min_price": "Min Price",
+		"max_price": "Max Price",
+		"property_type": "Property Type",
+		"any_type": "Any Type",
+		"bedrooms": "Bedrooms",
+		"bathrooms": "Bathrooms",
+		"any": "Any",
+		"amenities": "Amenities & Features",
+		"clear_all": "Clear all filters",
+		"show_homes": "Show Homes"
+	},
+	"property_details": {
+		"top_rated_agent": "Top Rated Agent",
+		"schedule_visit": "Schedule Visit",
+		"contact_agent": "Contact Agent",
+		"features": "Property Features",
+		"square_meters": "Square Meters",
+		"bedrooms": "Bedrooms",
+		"bathrooms": "Bathrooms",
+		"garage": "Garage",
+		"about": "About this home",
+		"desc_1": "Experience modern luxury in {title} located in {location}. Designed with an emphasis on indoor-outdoor living, the residence features floor-to-ceiling glass walls that flood the interiors with natural light.",
+		"desc_2": "The open-concept kitchen is equipped with top-of-the-line appliances and custom cabinetry, perfect for culinary enthusiasts. Retreat to the primary suite, a sanctuary of relaxation with a spa-inspired bath and private balcony.",
+		"read_more": "Read more",
+		"amenities": "Amenities",
+		"amenities_list": {
+			"smart_home": "Smart Home System",
+			"pool": "Swimming Pool",
+			"hvac": "Central Heating & Cooling",
+			"ev": "Electric Vehicle Charging",
+			"gym": "Private Gym",
+			"wine_cellar": "Wine Cellar"
+		},
+		"estimated_payment": "Estimated Payment",
+		"starting_from": "Starting from",
+		"with_down": "with 20% down",
+		"calculate_mortgage": "Calculate Mortgage"
+	}
 }
