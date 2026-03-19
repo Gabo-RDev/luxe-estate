@@ -13,6 +13,18 @@
     "sell": "Sell",
     "saved": "Saved Homes"
   },
+  "amenities": {
+    "pool": "Pool",
+    "wifi": "Wi-Fi",
+    "gym": "Gym",
+    "parking": "Parking",
+    "security": "Security",
+    "garden": "Garden"
+  },
+  "properties_page": {
+    "title": "All Properties",
+    "description": "Discover our exclusive selection of luxury real estate properties around the world."
+  },
   "home": {
     "title": "Find your dream home",
     "subtitle": "Discover the most exclusive and luxurious properties.",
@@ -30,7 +42,9 @@
     "house": "House",
     "apartment": "Apartment",
     "villa": "Villa",
-    "penthouse": "Penthouse"
+    "penthouse": "Penthouse",
+    "condo": "Condo",
+    "townhouse": "Townhouse"
   },
   "search_hero": {
     "find_your": "Find your ",

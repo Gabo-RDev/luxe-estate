@@ -1,12 +1,7 @@
 'use client';
 
 import PropertyCard from './PropertyCard';
-import { Property } from '@/types/Property';
-
-interface PropertyGridProps {
-	properties: Property[];
-	currentPage: number;
-}
+import { PropertyGridProps } from '@/interfaces/PropertyGridProps.interface';
 
 export default function PropertyGrid({
 	properties,

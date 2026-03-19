@@ -1,13 +1,9 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import type { Locale } from './config';
-import type { Dictionary } from './getDictionary';
+import type { Locale, Dictionary } from '@/types/I18n';
 
-interface I18nContextType {
-  locale: Locale;
-  dictionary: Dictionary;
-}
+import { I18nContextType } from '@/interfaces/I18nContextType.interface';
 
 const I18nContext = createContext<I18nContextType | null>(null);
 

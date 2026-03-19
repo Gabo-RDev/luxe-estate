@@ -1,14 +1,11 @@
 'use client';
 
-import { Property } from '@/types/Property';
+import { Property } from '@/interfaces/Property.interface';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useI18n } from '@/lib/i18n/i18n-context';
 
-interface PropertyCardProps {
-	property: Property;
-	featuredMode?: boolean;
-}
+import { PropertyCardProps } from '@/interfaces/PropertyCardProps.interface';
 
 export default function PropertyCard({
 	property,
@@ -32,11 +29,11 @@ export default function PropertyCard({
 						sizes='(max-width: 1024px) 100vw, 50vw'
 					/>
 					<div className='absolute top-4 left-4 flex gap-2 z-10'>
-						{property.isFeatured && (
+						{property.isFeatured ? (
 							<div className='bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic flex items-center gap-1 shadow-sm'>
 								{dictionary.property_card.exclusive}
 							</div>
-						)}
+						) : null}
 					</div>
 					<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
 						<span className='material-icons text-xl'>favorite_border</span>
@@ -59,7 +56,7 @@ export default function PropertyCard({
 							{property.pricePeriod}
 						</span>
 					</div>
-					<div className='flex items-center gap-6 mt-6 pt-6 border-t border-nordic/10'>
+					<div className='flex items-center gap-4 sm:gap-6 flex-wrap mt-6 pt-6 border-t border-nordic/10'>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
 							<span className='material-icons text-lg'>king_bed</span>{' '}
 							{property.beds} {dictionary.property_card.beds}
@@ -90,11 +87,11 @@ export default function PropertyCard({
 					sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
 				/>
 				<div className='absolute top-4 left-4 flex flex-col gap-2 items-start z-10'>
-					{property.isFeatured && (
+					{property.isFeatured ? (
 						<div className='bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic flex items-center gap-1 shadow-sm'>
 							{dictionary.property_card.exclusive}
 						</div>
-					)}
+					) : null}
 				</div>
 				<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all z-20'>
 					<span className='material-icons text-xl'>favorite_border</span>
@@ -109,11 +106,11 @@ export default function PropertyCard({
 				<div className='flex justify-between items-baseline mb-2'>
 					<h3 className='font-bold text-lg text-nordic'>
 						${property.price.toLocaleString('en-US')}
-						{property.pricePeriod && (
+						{property.pricePeriod ? (
 							<span className='text-sm font-normal text-nordic/70'>
 								{property.pricePeriod}
 							</span>
-						)}
+						) : null}
 					</h3>
 				</div>
 				<h4 className='text-nordic font-medium truncate mb-1'>

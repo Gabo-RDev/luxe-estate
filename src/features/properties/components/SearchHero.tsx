@@ -18,8 +18,8 @@ export default function SearchHero() {
 	} = useSearchFilters();
 
 	return (
-		<section className='py-12 md:py-16'>
-			<div className='max-w-3xl mx-auto text-center space-y-8'>
+		<section className='py-8 md:py-16'>
+			<div className='text-center space-y-6 md:space-y-8'>
 				<h1 className='text-4xl md:text-5xl lg:text-6xl font-light text-nordic leading-tight'>
 					{dictionary.search_hero.find_your}
 					<span className='relative inline-block'>
@@ -29,7 +29,7 @@ export default function SearchHero() {
 					.
 				</h1>
 
-				<form onSubmit={handleSearchSubmit} className='relative group max-w-2xl mx-auto'>
+				<form onSubmit={handleSearchSubmit} className='relative group max-w-2xl mx-auto w-full'>
 					<div className='absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none'>
 						<span className='material-icons text-nordic/60 text-2xl group-focus-within:text-mosque transition-colors'>
 							search
@@ -41,15 +41,15 @@ export default function SearchHero() {
 						placeholder={dictionary.search_hero.placeholder}
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
-						className='block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white text-nordic shadow-sm placeholder-nordic/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg'
+						className='block w-full pl-12 pr-32 md:pr-36 py-4 rounded-xl border-none bg-white text-nordic shadow-sm placeholder-nordic/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg'
 					/>
 					<button type='submit' className='absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20'>
 						{dictionary.search_hero.search}
 					</button>
 				</form>
 
-				<div className='flex items-center justify-center gap-3 overflow-x-auto hide-scroll py-2 px-4 -mx-4'>
-					{categories.map((cat) => (
+				<div className='flex items-center justify-start md:justify-center gap-3 overflow-x-auto hide-scroll py-2'>
+					{categories.map((cat: string) => (
 						<button
 							key={cat}
 							onClick={() => handleCategoryClick(cat)}
