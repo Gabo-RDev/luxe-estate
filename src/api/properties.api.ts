@@ -21,8 +21,12 @@ function rowToProperty(row: any): Property {
 	return {
 		id: row.id || row.slug,
 		title: row.title,
+		title_es: row.title_es ?? undefined,
+		title_fr: row.title_fr ?? undefined,
 		slug: row.slug,
 		location: row.location,
+		location_es: row.location_es ?? undefined,
+		location_fr: row.location_fr ?? undefined,
 		price: Number(row.price),
 		pricePeriod: row.price_period ?? undefined,
 		beds: Number(row.beds),

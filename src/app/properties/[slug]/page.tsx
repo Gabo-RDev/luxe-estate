@@ -5,6 +5,10 @@ import Image from 'next/image';
 import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 import PropertiesPage from '../page';
+import { cookies } from 'next/headers';
+import { Locale } from '@/lib/i18n/config';
+import { getDictionary } from '@/lib/i18n/getDictionary';
+import { Property } from '@/types/Property';
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
@@ -23,6 +27,10 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 	const { slug } = await params;
 	const property = await getPropertyBySlug(slug);
 
+	const cookieStore = await cookies();
+	const locale = (cookieStore.get('NEXT_LOCALE')?.value as Locale) || 'es';
+	const dictionary = await getDictionary(locale);
+
 	if (!property) {
 		// If no property is found by this slug, we assume it's a location route
 		// e.g. /properties/punta-cana
@@ -38,6 +46,9 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 		return <PropertiesPage searchParams={combinedParams} />;
 	}
 
+	const localizedTitle = property[`title_${locale}` as keyof Property] as string || property.title;
+	const localizedLocation = property[`location_${locale}` as keyof Property] as string || property.location;
+
 	return (
 		<div className='bg-clear-day min-h-screen text-nordic selection:bg-mosque/20'>
 			<Navigation />
@@ -47,7 +58,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 					<div className='lg:col-span-8 space-y-4'>
 						<PropertyGallery
 							images={property.images ?? []}
-							title={property.title}
+							title={localizedTitle}
 							badge={property.badge}
 							imageUrl={property.imageUrl}
 						/>
@@ -65,7 +76,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										<span className='material-icons text-mosque text-sm'>
 											location_on
 										</span>
-										{property.location}
+										{localizedLocation}
 									</p>
 								</div>
 
@@ -85,7 +96,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										<h3 className='font-semibold text-nordic'>Sarah Jenkins</h3>
 										<div className='flex items-center gap-1 text-xs text-mosque font-medium'>
 											<span className='material-icons text-[14px]'>star</span>
-											<span>Top Rated Agent</span>
+											<span>{dictionary.property_details.top_rated_agent}</span>
 										</div>
 									</div>
 									<div className='ml-auto flex gap-3'>
@@ -103,18 +114,18 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										<span className='material-icons text-xl group-hover:scale-110 transition-transform'>
 											calendar_today
 										</span>
-										Schedule Visit
+										{dictionary.property_details.schedule_visit}
 									</button>
 									<button className='w-full bg-transparent border border-nordic/10 hover:border-mosque text-nordic/80 hover:text-mosque py-4 px-6 rounded-lg font-medium transition-all flex items-center justify-center gap-2'>
 										<span className='material-icons text-xl'>mail_outline</span>
-										Contact Agent
+										{dictionary.property_details.contact_agent}
 									</button>
 								</div>
 							</div>
 
 							<div className='bg-white p-2 rounded-xl shadow-sm border border-mosque/5'>
 								<PropertyMap
-									location={property.location}
+									location={localizedLocation}
 									lat={property.lat}
 									lng={property.lng}
 								/>
@@ -127,7 +138,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 					<div className='lg:col-span-8 space-y-8'>
 						<div className='bg-white p-8 rounded-xl shadow-sm border border-mosque/5'>
 							<h2 className='text-lg font-semibold mb-6 text-nordic'>
-								Property Features
+								{dictionary.property_details.features}
 							</h2>
 							<div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
 								<div className='flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10'>
@@ -138,7 +149,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										{property.area}
 									</span>
 									<span className='text-xs uppercase tracking-wider text-nordic/50'>
-										Square Meters
+										{dictionary.property_details.square_meters}
 									</span>
 								</div>
 								<div className='flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10'>
@@ -149,7 +160,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										{property.beds}
 									</span>
 									<span className='text-xs uppercase tracking-wider text-nordic/50'>
-										Bedrooms
+										{dictionary.property_details.bedrooms}
 									</span>
 								</div>
 								<div className='flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10'>
@@ -160,7 +171,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 										{property.baths}
 									</span>
 									<span className='text-xs uppercase tracking-wider text-nordic/50'>
-										Bathrooms
+										{dictionary.property_details.bathrooms}
 									</span>
 								</div>
 								<div className='flex flex-col items-center justify-center p-4 bg-mosque/5 rounded-lg border border-mosque/10'>
@@ -169,7 +180,7 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 									</span>
 									<span className='text-xl font-bold text-nordic'>2</span>
 									<span className='text-xs uppercase tracking-wider text-nordic/50'>
-										Garage
+										{dictionary.property_details.garage}
 									</span>
 								</div>
 							</div>
@@ -177,41 +188,28 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 
 						<div className='bg-white p-8 rounded-xl shadow-sm border border-mosque/5'>
 							<h2 className='text-lg font-semibold mb-4 text-nordic'>
-								About this home
+								{dictionary.property_details.about}
 							</h2>
 							<div className='prose prose-slate max-w-none text-nordic/70 leading-relaxed'>
 								<p className='mb-4'>
-									Experience modern luxury in {property.title} located in{' '}
-									{property.location}. Designed with an emphasis on
-									indoor-outdoor living, the residence features floor-to-ceiling
-									glass walls that flood the interiors with natural light.
+									{dictionary.property_details.desc_1.replace('{title}', localizedTitle).replace('{location}', localizedLocation)}
 								</p>
 								<p>
-									The open-concept kitchen is equipped with top-of-the-line
-									appliances and custom cabinetry, perfect for culinary
-									enthusiasts. Retreat to the primary suite, a sanctuary of
-									relaxation with a spa-inspired bath and private balcony.
+									{dictionary.property_details.desc_2}
 								</p>
 							</div>
 							<button className='mt-4 text-mosque font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all'>
-								Read more
+								{dictionary.property_details.read_more}
 								<span className='material-icons text-sm'>arrow_forward</span>
 							</button>
 						</div>
 
 						<div className='bg-white p-8 rounded-xl shadow-sm border border-mosque/5'>
 							<h2 className='text-lg font-semibold mb-6 text-nordic'>
-								Amenities
+								{dictionary.property_details.amenities}
 							</h2>
 							<div className='grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8'>
-								{[
-									'Smart Home System',
-									'Swimming Pool',
-									'Central Heating & Cooling',
-									'Electric Vehicle Charging',
-									'Private Gym',
-									'Wine Cellar',
-								].map((amenity, i) => (
+								{Object.values(dictionary.property_details.amenities_list).map((amenity, i) => (
 									<div
 										key={i}
 										className='flex items-center gap-3 text-nordic/70'
@@ -232,19 +230,19 @@ export default async function PropertyDetailsPage({ params, searchParams }: Page
 								</div>
 								<div>
 									<h3 className='font-semibold text-nordic'>
-										Estimated Payment
+										{dictionary.property_details.estimated_payment}
 									</h3>
 									<p className='text-sm text-nordic/60'>
-										Starting from{' '}
+										{dictionary.property_details.starting_from}{' '}
 										<strong className='text-mosque'>
 											${Math.floor(property.price / 250).toLocaleString()}/mo
 										</strong>{' '}
-										with 20% down
+										{dictionary.property_details.with_down}
 									</p>
 								</div>
 							</div>
 							<button className='whitespace-nowrap px-4 py-2 bg-white border border-nordic/10 rounded-lg text-sm font-semibold hover:border-mosque transition-colors text-nordic'>
-								Calculate Mortgage
+								{dictionary.property_details.calculate_mortgage}
 							</button>
 						</div>
 					</div>

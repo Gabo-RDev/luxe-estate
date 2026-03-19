@@ -2,10 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { LanguageSelector } from '../ui/LanguageSelector';
+import { useI18n } from '@/lib/i18n/i18n-context';
 
 export default function Navigation() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const { dictionary } = useI18n();
 
 	const handleLogoClick = (e: React.MouseEvent) => {
 		// If we are already on the home page AND there are no search params, scroll to top smoothly
@@ -42,37 +45,41 @@ export default function Navigation() {
 							}`}
 							href='/properties'
 						>
-							Buy
+							{dictionary.nav.buy}
 						</Link>
 						<Link
 							className='text-nordic/70 hover:text-nordic font-medium text-sm hover:border-b-2 hover:border-nordic/20 px-1 py-1 transition-all'
 							href='#'
 						>
-							Rent
+							{dictionary.nav.rent}
 						</Link>
 						<Link
 							className='text-nordic/70 hover:text-nordic font-medium text-sm hover:border-b-2 hover:border-nordic/20 px-1 py-1 transition-all'
 							href='#'
 						>
-							Sell
+							{dictionary.nav.sell}
 						</Link>
 						<Link
 							className='text-nordic/70 hover:text-nordic font-medium text-sm hover:border-b-2 hover:border-nordic/20 px-1 py-1 transition-all'
 							href='#'
 						>
-							Saved Homes
+							{dictionary.nav.saved}
 						</Link>
 					</div>
 
-					<div className='flex items-center space-x-6'>
-						<button className='text-nordic hover:text-mosque transition-colors'>
+					<div className='flex items-center space-x-2 md:space-x-4'>
+						<button className='w-10 h-10 flex items-center justify-center text-nordic hover:text-mosque hover:bg-nordic/5 rounded-full transition-colors' title={dictionary.common.search}>
 							<span className='material-icons'>search</span>
 						</button>
-						<button className='text-nordic hover:text-mosque transition-colors relative'>
+						
+						<button className='w-10 h-10 flex items-center justify-center text-nordic hover:text-mosque hover:bg-nordic/5 rounded-full transition-colors relative'>
 							<span className='material-icons'>notifications_none</span>
-							<span className='absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-clear-day'></span>
+							<span className='absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-clear-day'></span>
 						</button>
-						<button className='flex items-center gap-2 pl-2 border-l border-nordic/10 ml-2'>
+						
+						<div className='h-6 w-px bg-nordic/10 mx-2 md:mx-4'></div>
+						
+						<button className='flex items-center justify-center'>
 							<div className='w-9 h-9 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent hover:ring-mosque transition-all'>
 								<img
 									alt='Profile'
@@ -81,6 +88,8 @@ export default function Navigation() {
 								/>
 							</div>
 						</button>
+
+						<LanguageSelector />
 					</div>
 				</div>
 			</div>

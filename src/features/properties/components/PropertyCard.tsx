@@ -3,6 +3,7 @@
 import { Property } from '@/types/Property';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useI18n } from '@/lib/i18n/i18n-context';
 
 interface PropertyCardProps {
 	property: Property;
@@ -13,6 +14,11 @@ export default function PropertyCard({
 	property,
 	featuredMode = false,
 }: PropertyCardProps) {
+	const { dictionary, locale } = useI18n();
+
+	const localizedTitle = property[`title_${locale}` as keyof Property] as string || property.title;
+	const localizedLocation = property[`location_${locale}` as keyof Property] as string || property.location;
+    
 	// If featuredMode is true, we use a larger card style with Hint of Green background for the highlights
 	if (featuredMode) {
 		return (
@@ -28,7 +34,7 @@ export default function PropertyCard({
 					<div className='absolute top-4 left-4 flex gap-2 z-10'>
 						{property.isFeatured && (
 							<div className='bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic flex items-center gap-1 shadow-sm'>
-								Exclusive
+								{dictionary.property_card.exclusive}
 							</div>
 						)}
 					</div>
@@ -41,11 +47,11 @@ export default function PropertyCard({
 					<div className='flex justify-between items-start mb-2'>
 						<div>
 							<h3 className='text-xl font-medium text-nordic group-hover:text-mosque transition-colors'>
-								{property.title}
+								{localizedTitle}
 							</h3>
 							<p className='text-nordic/70 text-sm flex items-center gap-1 mt-1'>
 								<span className='material-icons text-sm'>place</span>{' '}
-								{property.location}
+								{localizedLocation}
 							</p>
 						</div>
 						<span className='text-xl font-semibold text-mosque'>
@@ -56,11 +62,11 @@ export default function PropertyCard({
 					<div className='flex items-center gap-6 mt-6 pt-6 border-t border-nordic/10'>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
 							<span className='material-icons text-lg'>king_bed</span>{' '}
-							{property.beds} Beds
+							{property.beds} {dictionary.property_card.beds}
 						</div>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
 							<span className='material-icons text-lg'>bathtub</span>{' '}
-							{property.baths} Baths
+							{property.baths} {dictionary.property_card.baths}
 						</div>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
 							<span className='material-icons text-lg'>square_foot</span>{' '}
@@ -86,7 +92,7 @@ export default function PropertyCard({
 				<div className='absolute top-4 left-4 flex flex-col gap-2 items-start z-10'>
 					{property.isFeatured && (
 						<div className='bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-nordic flex items-center gap-1 shadow-sm'>
-							Exclusive
+							{dictionary.property_card.exclusive}
 						</div>
 					)}
 				</div>
@@ -96,7 +102,7 @@ export default function PropertyCard({
 				<div
 					className={`absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded ${property.listingType === 'Rent' ? 'bg-mosque/90' : 'bg-nordic/90'}`}
 				>
-					FOR {property.listingType.toUpperCase()}
+					{dictionary.property_card.for} {property.listingType === 'Rent' ? dictionary.property_card.rent : dictionary.property_card.buy}
 				</div>
 			</div>
 			<div className='p-4 flex flex-col grow'>
@@ -111,9 +117,9 @@ export default function PropertyCard({
 					</h3>
 				</div>
 				<h4 className='text-nordic font-medium truncate mb-1'>
-					{property.title}
+					{localizedTitle}
 				</h4>
-				<p className='text-nordic/70 text-xs mb-4'>{property.location}</p>
+				<p className='text-nordic/70 text-xs mb-4'>{localizedLocation}</p>
 
 				<div className='mt-auto flex items-center justify-between pt-3 border-t border-nordic/10'>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>

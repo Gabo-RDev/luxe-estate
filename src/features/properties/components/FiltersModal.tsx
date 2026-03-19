@@ -11,6 +11,7 @@ import {
 import { filtersReducer } from "@/reducers/filtersReducer";
 import { formatPrice } from "@/utils/formatters";
 import { getInitialFilters, mapFiltersToParams } from "@/utils/filters";
+import { useI18n } from '@/lib/i18n/i18n-context';
 
 interface FiltersModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ interface FiltersModalProps {
 export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { dictionary } = useI18n();
 
   const [state, dispatch] = useReducer(
     filtersReducer,
@@ -91,7 +93,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
         {/* Header */}
         <header className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-30">
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900 ">
-            Filters
+            {dictionary.filters.title}
           </h1>
           <button
             onClick={onClose}
@@ -107,7 +109,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
           {/* Section 1: Location */}
           <section>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Location
+              {dictionary.filters.location}
             </label>
             <div className="relative group">
               <span className="material-icons absolute left-4 top-3.5 text-gray-400 group-focus-within:text-[#006611] transition-colors">
@@ -115,7 +117,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
               </span>
               <input
                 className="w-full pl-12 pr-4 py-3 bg-[#f5f8f6] border-0 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#006611] focus:bg-white transition-all shadow-sm"
-                placeholder="City, neighborhood, or address"
+                placeholder={dictionary.filters.location_placeholder}
                 type="text"
                 value={location}
                 onChange={(e) =>
@@ -129,7 +131,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
           <section>
             <div className="flex justify-between items-end mb-4">
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Price Range
+                {dictionary.filters.price_range}
               </label>
               <span className="text-sm font-medium text-[#006611]">
                 {formatPrice(minPrice)} – {formatPrice(maxPrice)}
@@ -207,7 +209,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-[#f5f8f6] p-3 rounded-lg border border-transparent focus-within:border-[#006611]/30 transition-colors">
                 <label className="block text-[10px] text-gray-500 uppercase font-medium mb-1">
-                  Min Price
+                  {dictionary.filters.min_price}
                 </label>
                 <div className="flex items-center">
                   <span className="text-gray-400 mr-1">$</span>
@@ -236,7 +238,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
               </div>
               <div className="bg-[#f5f8f6] p-3 rounded-lg border border-transparent focus-within:border-[#006611]/30 transition-colors">
                 <label className="block text-[10px] text-gray-500 uppercase font-medium mb-1">
-                  Max Price
+                  {dictionary.filters.max_price}
                 </label>
                 <div className="flex items-center">
                   <span className="text-gray-400 mr-1">$</span>
@@ -271,7 +273,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
             {/* Property Type */}
             <div className="space-y-3">
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Property Type
+                {dictionary.filters.property_type}
               </label>
               <div className="relative">
                 <select
@@ -284,12 +286,14 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
                     })
                   }
                 >
-                  <option value="all">Any Type</option>
-                  <option value="house">House</option>
-                  <option value="apartment">Apartment</option>
-                  <option value="condo">Condo</option>
-                  <option value="townhouse">Townhouse</option>
-                  <option value="penthouse">Penthouse</option>
+                  <option value="all">{dictionary.filters.any_type}</option>
+                  {Object.entries(dictionary.categories)
+                    .filter(([key]) => key !== 'all')
+                    .map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                  ))}
                 </select>
                 <span className="material-icons absolute right-3 top-3 text-gray-400 pointer-events-none">
                   expand_more
@@ -302,7 +306,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
               {/* Beds */}
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-900 ">
-                  Bedrooms
+                  {dictionary.filters.bedrooms}
                 </span>
                 <div className="flex items-center space-x-3 bg-[#f5f8f6] rounded-full p-1">
                   <button
@@ -317,7 +321,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
                     <span className="material-icons text-base">remove</span>
                   </button>
                   <span className="text-sm font-semibold w-6 text-center text-[#006611]">
-                    {beds === 0 ? "Any" : `${beds}+`}
+                    {beds === 0 ? dictionary.filters.any : `${beds}+`}
                   </span>
                   <button
                     onClick={() =>
@@ -333,7 +337,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
               {/* Baths */}
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-900 ">
-                  Bathrooms
+                  {dictionary.filters.bathrooms}
                 </span>
                 <div className="flex items-center space-x-3 bg-[#f5f8f6] rounded-full p-1">
                   <button
@@ -348,7 +352,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
                     <span className="material-icons text-base">remove</span>
                   </button>
                   <span className="text-sm font-semibold w-6 text-center text-[#006611]">
-                    {baths === 0 ? "Any" : `${baths}+`}
+                    {baths === 0 ? dictionary.filters.any : `${baths}+`}
                   </span>
                   <button
                     onClick={() =>
@@ -366,7 +370,7 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
           {/* Section 4: Amenities */}
           <section>
             <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              Amenities &amp; Features
+              {dictionary.filters.amenities}
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {AMENITIES_LIST.map(
@@ -413,13 +417,13 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
             onClick={handleClearFilters}
             className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors underline decoration-gray-300 underline-offset-4 cursor-pointer"
           >
-            Clear all filters
+            {dictionary.filters.clear_all}
           </button>
           <button
             onClick={handleApplyFilters}
             className="bg-[#006611] hover:bg-[#006611]/90 text-white px-8 py-3 rounded-lg font-medium shadow-lg shadow-[#006611]/30 transition-all hover:shadow-[#006611]/40 flex items-center gap-2 transform active:scale-95 cursor-pointer"
           >
-            Show Homes
+            {dictionary.filters.show_homes}
             <span className="material-icons text-sm">arrow_forward</span>
           </button>
         </footer>
