@@ -1,108 +1,94 @@
 {
-	"common": {
-		"language": "Idioma",
-		"search": "Buscar",
-		"properties": "Propiedades",
-		"contact": "Contacto",
-		"prev": "Anterior",
-		"next": "Siguiente"
-	},
-	"nav": {
-		"buy": "Comprar",
-		"rent": "Alquilar",
-		"sell": "Vender",
-		"saved": "Guardados"
-	},
-	"amenities": {
-		"pool": "Piscina",
-		"wifi": "Wi-Fi",
-		"gym": "Gimnasio",
-		"parking": "Estacionamiento",
-		"security": "Seguridad",
-		"garden": "Jardín"
-	},
-	"properties_page": {
-		"title": "Todas Las Propiedades",
-		"description": "Descubre nuestra selección exclusiva de propiedades inmobiliarias de lujo en todo el mundo."
-	},
-	"home": {
-		"title": "Encuentra la casa de tus sueños",
-		"subtitle": "Descubre las propiedades más exclusivas y lujosas.",
-		"featured_collections": "Colecciones Destacadas",
-		"curated_properties": "Propiedades curadas para los más exigentes.",
-		"view_all": "Ver todas",
-		"new_in_market": "Nuevas en el Mercado",
-		"fresh_opportunities": "Nuevas oportunidades añadidas esta semana.",
-		"all": "Todas",
-		"buy": "Comprar",
-		"rent": "Alquilar"
-	},
-	"categories": {
-		"all": "Todas",
-		"house": "Casa",
-		"apartment": "Apartamento",
-		"villa": "Villa",
-		"penthouse": "Penthouse",
-		"condo": "Condominio",
-		"townhouse": "Townhouse"
-	},
-	"search_hero": {
-		"find_your": "Encuentra tu ",
-		"sanctuary": "santuario",
-		"placeholder": "Buscar ciudad, barrio o dirección...",
-		"search": "Buscar",
-		"filters": "Filtros"
-	},
-	"property_card": {
-		"exclusive": "Exclusivo",
-		"for": "EN",
-		"buy": "VENTA",
-		"rent": "ALQUILER",
-		"sale": "VENTA",
-		"beds": "Camas",
-		"baths": "Baños"
-	},
-	"filters": {
-		"title": "Filtros",
-		"location": "Ubicación",
-		"location_placeholder": "Ciudad, barrio o dirección",
-		"price_range": "Rango de Precios",
-		"min_price": "Precio Min",
-		"max_price": "Precio Max",
-		"property_type": "Tipo de Propiedad",
-		"any_type": "Cualquier Tipo",
-		"bedrooms": "Dormitorios",
-		"bathrooms": "Baños",
-		"any": "Cualquiera",
-		"amenities": "Comodidades y Características",
-		"clear_all": "Borrar todos los filtros",
-		"show_homes": "Mostrar Propiedades"
-	},
-	"property_details": {
-		"top_rated_agent": "Agente Mejor Valorado",
-		"schedule_visit": "Agendar Visita",
-		"contact_agent": "Contactar Agente",
-		"features": "Características de la Propiedad",
-		"square_meters": "Metros Cuadrados",
-		"bedrooms": "Dormitorios",
-		"bathrooms": "Baños",
-		"garage": "Garaje",
-		"about": "Acerca de este hogar",
-		"desc_1": "Experimente el lujo moderno en {title} ubicado en {location}. Diseñado con un énfasis en la vida interior-exterior, la residencia cuenta con paredes de vidrio de piso a techo que inundan los interiores con luz natural.",
-		"desc_2": "La cocina de concepto abierto está equipada con electrodomésticos de primera línea y gabinetes personalizados, perfectos para los entusiastas culinarios. Retírese a la suite principal, un santuario de relajación con un baño inspirado en un spa y balcón privado.",
-		"read_more": "Leer más",
-		"amenities": "Comodidades",
-		"amenities_list": {
-			"smart_home": "Sistema de Casa Inteligente",
-			"pool": "Piscina",
-			"hvac": "Calefacción y Aire Central",
-			"ev": "Carga de Vehículo Eléctrico",
-			"gym": "Gimnasio Privado",
-			"wine_cellar": "Cava de Vinos"
-		},
-		"estimated_payment": "Pago Estimado",
-		"starting_from": "Desde",
-		"with_down": "con 20% de enganche",
-		"calculate_mortgage": "Calcular Hipoteca"
-	}
+  "common": {
+    "language": "Idioma",
+    "search": "Buscar",
+    "properties": "Propiedades",
+    "contact": "Contacto",
+    "prev": "Anterior",
+    "next": "Siguiente"
+  },
+  "nav": {
+    "buy": "Comprar",
+    "rent": "Alquilar",
+    "sell": "Vender",
+    "saved": "Guardados"
+  },
+  "home": {
+    "title": "Encuentra la casa de tus sueños",
+    "subtitle": "Descubre las propiedades más exclusivas y lujosas.",
+    "featured_collections": "Colecciones Destacadas",
+    "curated_properties": "Propiedades curadas para los más exigentes.",
+    "view_all": "Ver todas",
+    "new_in_market": "Nuevas en el Mercado",
+    "fresh_opportunities": "Nuevas oportunidades añadidas esta semana.",
+    "all": "Todas",
+    "buy": "Comprar",
+    "rent": "Alquilar"
+  },
+  "categories": {
+    "all": "Todas",
+    "house": "Casa",
+    "apartment": "Apartamento",
+    "villa": "Villa",
+    "penthouse": "Penthouse"
+  },
+  "search_hero": {
+    "find_your": "Encuentra tu ",
+    "sanctuary": "santuario",
+    "placeholder": "Buscar ciudad, barrio o dirección...",
+    "search": "Buscar",
+    "filters": "Filtros"
+  },
+  "property_card": {
+    "exclusive": "Exclusivo",
+    "for": "EN",
+    "buy": "VENTA",
+    "rent": "ALQUILER",
+    "sale": "VENTA",
+    "beds": "Camas",
+    "baths": "Baños"
+  },
+  "filters": {
+    "title": "Filtros",
+    "location": "Ubicación",
+    "location_placeholder": "Ciudad, barrio o dirección",
+    "price_range": "Rango de Precios",
+    "min_price": "Precio Min",
+    "max_price": "Precio Max",
+    "property_type": "Tipo de Propiedad",
+    "any_type": "Cualquier Tipo",
+    "bedrooms": "Dormitorios",
+    "bathrooms": "Baños",
+    "any": "Cualquiera",
+    "amenities": "Comodidades y Características",
+    "clear_all": "Borrar todos los filtros",
+    "show_homes": "Mostrar Propiedades"
+  },
+  "property_details": {
+    "top_rated_agent": "Agente Mejor Valorado",
+    "schedule_visit": "Agendar Visita",
+    "contact_agent": "Contactar Agente",
+    "features": "Características de la Propiedad",
+    "square_meters": "Metros Cuadrados",
+    "bedrooms": "Dormitorios",
+    "bathrooms": "Baños",
+    "garage": "Garaje",
+    "about": "Acerca de este hogar",
+    "desc_1": "Experimente el lujo moderno en {title} ubicado en {location}. Diseñado con un énfasis en la vida interior-exterior, la residencia cuenta con paredes de vidrio de piso a techo que inundan los interiores con luz natural.",
+    "desc_2": "La cocina de concepto abierto está equipada con electrodomésticos de primera línea y gabinetes personalizados, perfectos para los entusiastas culinarios. Retírese a la suite principal, un santuario de relajación con un baño inspirado en un spa y balcón privado.",
+    "read_more": "Leer más",
+    "amenities": "Comodidades",
+    "amenities_list": {
+      "smart_home": "Sistema de Casa Inteligente",
+      "pool": "Piscina",
+      "hvac": "Calefacción y Aire Central",
+      "ev": "Carga de Vehículo Eléctrico",
+      "gym": "Gimnasio Privado",
+      "wine_cellar": "Cava de Vinos"
+    },
+    "estimated_payment": "Pago Estimado",
+    "starting_from": "Desde",
+    "with_down": "con 20% de enganche",
+    "calculate_mortgage": "Calcular Hipoteca"
+  }
 }

@@ -1,10 +1,11 @@
-import { getProperties } from '@/api/properties.api';
-import { PAGE_SIZE } from '@/lib/constants';
+import { getProperties, PAGE_SIZE } from '@/api/properties.api';
 import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import Pagination from '@/components/ui/Pagination';
 import { Suspense } from 'react';
 
-import { PropertyGridSectionProps } from '@/interfaces/PropertyGridSectionProps.interface';
+interface PropertyGridSectionProps {
+	currentPage: number;
+}
 
 // Skeleton that matches the 3-column grid for a smooth loading state
 function PropertyGridSkeleton() {

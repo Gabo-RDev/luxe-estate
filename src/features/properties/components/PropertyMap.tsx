@@ -4,22 +4,26 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { PropertyMapProps } from '@/interfaces/PropertyMapProps.interface';
-
-// Created once at module level — no need to recreate on every render
-const customIcon = L.divIcon({
-	className: 'custom-map-marker bg-transparent border-0',
-	html: `<div class="w-8 h-8 bg-mosque rounded-full border-4 border-white shadow-lg flex items-center justify-center" style="margin-top: -16px; margin-left: -16px;">
-            <span class="material-icons text-white" style="font-size: 16px;">home</span>
-           </div>`,
-	iconSize: [32, 32],
-	iconAnchor: [16, 32],
-});
+interface PropertyMapProps {
+	location: string;
+	lat?: number;
+	lng?: number;
+}
 
 export default function PropertyMap({ location, lat, lng }: PropertyMapProps) {
 	// Use real coordinates if provided, otherwise fall back to generic US center
 	const hasCoords = lat !== undefined && lng !== undefined;
 	const position: [number, number] = hasCoords ? [lat!, lng!] : [39.5, -98.35];
+
+	// Dynamic icon to avoid SSR rendering issues with leaflet icons
+	const customIcon = L.divIcon({
+		className: 'custom-map-marker bg-transparent border-0',
+		html: `<div class="w-8 h-8 bg-mosque rounded-full border-4 border-white shadow-lg flex items-center justify-center" style="margin-top: -16px; margin-left: -16px;">
+            <span class="material-icons text-white" style="font-size: 16px;">home</span>
+           </div>`,
+		iconSize: [32, 32],
+		iconAnchor: [16, 32],
+	});
 
 	return (
 		<div className='relative w-full aspect-4/3 rounded-lg overflow-hidden bg-slate-100 z-0'>

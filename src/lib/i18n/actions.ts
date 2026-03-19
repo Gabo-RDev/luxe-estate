@@ -1,8 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { locales, defaultLocale } from '@/lib/i18n/config';
-import { Locale } from '@/types/I18n';
+import { Locale, locales, defaultLocale } from '@/lib/i18n/config';
 
 export async function setLocaleAction(locale: Locale) {
   if (!locales.includes(locale)) {

@@ -3,7 +3,12 @@
 import Image from 'next/image';
 import { useState } from 'react';
 
-import { PropertyGalleryProps } from '@/interfaces/PropertyGalleryProps.interface';
+interface PropertyGalleryProps {
+	images: string[];
+	title: string;
+	badge?: string;
+	imageUrl?: string; // fallback if images array is empty
+}
 
 export default function PropertyGallery({
 	images,

@@ -13,18 +13,6 @@
 		"sell": "Vendre",
 		"saved": "Maisons Sauvegardées"
 	},
-	"amenities": {
-		"pool": "Piscine",
-		"wifi": "Wi-Fi",
-		"gym": "Gymnase",
-		"parking": "Parking",
-		"security": "Sécurité",
-		"garden": "Jardin"
-	},
-	"properties_page": {
-		"title": "Toutes Les Propriétés",
-		"description": "Découvrez notre sélection exclusive de propriétés immobilières de luxe à travers le monde."
-	},
 	"home": {
 		"title": "Trouvez la maison de vos rêves",
 		"subtitle": "Découvrez les propriétés les plus exclusives et luxueuses.",
@@ -42,9 +30,7 @@
 		"house": "Maison",
 		"apartment": "Appartement",
 		"villa": "Villa",
-		"penthouse": "Penthouse",
-		"condo": "Condo",
-		"townhouse": "Maison de ville"
+		"penthouse": "Penthouse"
 	},
 	"search_hero": {
 		"find_your": "Trouvez votre ",

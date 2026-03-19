@@ -1,21 +1,19 @@
 import { createClient } from '@/lib/supabase/server';
-import { Property } from '@/interfaces/Property.interface';
-import { PaginatedProperties } from '@/interfaces/PaginatedProperties.interface';
-import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
-import { PAGE_SIZE, MAX_PAGE_SIZE } from '@/lib/constants';
-import type { Tables } from '@/types/database.types';
+import { Property } from '@/types/Property';
 
-/** Shape returned by Supabase when property_images are joined via select('*, property_images(url, order)') */
-type PropertyRow = Tables<'properties'> & {
-	property_images: Pick<Tables<'property_images'>, 'url' | 'order'>[];
-};
+// Number of non-featured properties shown per page
+export const PAGE_SIZE = 6;
+
+// Upper bound for pageSize to prevent oversized range queries
+export const MAX_PAGE_SIZE = 100;
 
 // Map snake_case DB row → camelCase Property interface
-function rowToProperty(row: PropertyRow): Property {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function rowToProperty(row: any): Property {
 	// property_images rows come back as [{ url, order }, ...], sorted by our query
 	const images: string[] =
-		row.property_images.length > 0
-			? [...row.property_images]
+		Array.isArray(row.property_images) && row.property_images.length > 0
+			? (row.property_images as { url: string; order: number }[])
 					.sort((a, b) => a.order - b.order)
 					.map((img) => img.url)
 			: [row.image_url];
@@ -61,6 +59,23 @@ export async function getFeaturedProperties(): Promise<Property[]> {
 	}
 
 	return (data ?? []).map(rowToProperty);
+}
+
+export interface PaginatedProperties {
+	data: Property[];
+	totalCount: number;
+	totalPages: number;
+	currentPage: number;
+}
+
+export interface PropertyFilters {
+	query?: string;
+	propertyType?: string;
+	minPrice?: number;
+	maxPrice?: number;
+	beds?: number;
+	baths?: number;
+	location?: string;
 }
 
 /** Fetch non-featured properties with server-side pagination. */
