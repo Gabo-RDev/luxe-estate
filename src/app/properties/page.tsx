@@ -3,7 +3,6 @@ import Pagination from '@/components/ui/Pagination';
 import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import PropertyGridSkeleton from '@/features/properties/components/PropertyGridSkeleton';
 import SearchHero from '@/features/properties/components/SearchHero';
-import Navigation from '@/components/layout/Navigation';
 import { getProperties } from '@/api/properties.api';
 import { PAGE_SIZE } from '@/lib/constants';
 import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
@@ -69,8 +68,6 @@ export default async function PropertiesPage({
 
 	return (
 		<div className='min-h-screen'>
-			<Navigation />
-
 			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				<SearchHero />
 				<div className='mb-8'>

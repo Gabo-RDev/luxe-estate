@@ -104,5 +104,20 @@
 		"starting_from": "À partir de",
 		"with_down": "avec 20% d'acompte",
 		"calculate_mortgage": "Calculer l'Hypothèque"
+	},
+	"auth": {
+		"login": "Se connecter",
+		"welcome": "Bienvenue chez LuxeEstate",
+		"unlock": "Découvrez des propriétés exclusives dans le monde entier.",
+		"continue_google": "Continuer avec Google",
+		"continue_github": "Continuer avec GitHub",
+		"no_account": "Vous n'avez pas de compte ?",
+		"signup": "S'inscrire",
+		"privacy": "Politique de Confidentialité",
+		"terms": "Conditions d'Utilisation",
+		"help": "Centre d'Aide",
+		"account": "Compte",
+		"my_profile": "Mon Profil",
+		"signout": "Se déconnecter"
 	}
 }

@@ -4,7 +4,7 @@ import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import SearchHero from '@/features/properties/components/SearchHero';
 import PropertyCard from '@/features/properties/components/PropertyCard';
 import PropertyGridSkeleton from '@/features/properties/components/PropertyGridSkeleton';
-import Navigation from '@/components/layout/Navigation';
+// import Navigation from '@/components/layout/Navigation'; (already in layout)
 import { getFeaturedProperties, getProperties } from '@/api/properties.api';
 import { PAGE_SIZE } from '@/lib/constants';
 import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
@@ -90,8 +90,6 @@ export default async function Home({ searchParams }: HomeProps) {
 
 	return (
 		<div className='min-h-screen'>
-			<Navigation />
-
 			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20'>
 				<SearchHero />
 

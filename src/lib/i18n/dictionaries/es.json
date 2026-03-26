@@ -104,5 +104,20 @@
 		"starting_from": "Desde",
 		"with_down": "con 20% de enganche",
 		"calculate_mortgage": "Calcular Hipoteca"
+	},
+	"auth": {
+		"login": "Iniciar sesión",
+		"welcome": "Bienvenido a LuxeEstate",
+		"unlock": "Desbloquea propiedades exclusivas en todo el mundo.",
+		"continue_google": "Continuar con Google",
+		"continue_github": "Continuar con GitHub",
+		"no_account": "¿No tienes una cuenta?",
+		"signup": "Registrarse",
+		"privacy": "Política de Privacidad",
+		"terms": "Términos de Servicio",
+		"help": "Centro de Ayuda",
+		"account": "Cuenta",
+		"my_profile": "Mi Perfil",
+		"signout": "Cerrar sesión"
 	}
 }

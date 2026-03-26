@@ -7,6 +7,7 @@ export function useNavigation() {
 	const searchParams = useSearchParams();
 	const { dictionary } = useI18n();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [isProfileOpen, setIsProfileOpen] = useState(false);
 
 	const handleLogoClick = (e: React.MouseEvent) => {
 		if (pathname === '/' && !searchParams.toString()) {
@@ -27,6 +28,8 @@ export function useNavigation() {
 		dictionary,
 		isMobileMenuOpen,
 		setIsMobileMenuOpen,
+		isProfileOpen,
+		setIsProfileOpen,
 		handleLogoClick,
 		navLinks,
 	};
