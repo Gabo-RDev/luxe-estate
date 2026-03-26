@@ -30,11 +30,11 @@ export default function PropertyGallery({
 					priority
 				/>
 				<div className='absolute top-4 left-4 flex gap-2'>
-					{badge && (
+					{badge ? (
 						<span className='bg-mosque text-white text-xs font-medium px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm'>
 							{badge}
 						</span>
-					)}
+					) : null}
 					<span className='bg-white/90 backdrop-blur text-nordic text-xs font-medium px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm'>
 						New
 					</span>

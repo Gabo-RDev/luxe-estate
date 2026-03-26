@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { useI18n } from '@/lib/i18n/i18n-context';
+import { createClient } from '@/lib/supabase/client';
 
 export function useNavigation() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const router = useRouter();
 	const { dictionary } = useI18n();
+	const supabase = createClient();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -13,6 +16,13 @@ export function useNavigation() {
 		if (pathname === '/' && !searchParams.toString()) {
 			e.preventDefault();
 			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	};
+
+	const handleSignOut = async () => {
+		const { error } = await supabase.auth.signOut();
+		if (!error) {
+			router.refresh();
 		}
 	};
 
@@ -31,6 +41,7 @@ export function useNavigation() {
 		isProfileOpen,
 		setIsProfileOpen,
 		handleLogoClick,
+		handleSignOut,
 		navLinks,
 	};
 }

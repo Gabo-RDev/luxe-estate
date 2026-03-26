@@ -1,5 +1,6 @@
 'use client';
 
+import { startTransition, useCallback } from 'react';
 import { AMENITIES_LIST, PRICE_BOUNDS } from '@/lib/constants';
 import { formatPrice } from '@/utils/formatters';
 import { useI18n } from '@/lib/i18n/i18n-context';
@@ -20,6 +21,10 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
 	} = useFiltersModal(isOpen, onClose);
 	const { location, minPrice, maxPrice, propertyType, beds, baths, amenities } =
 		state;
+
+	const handleToggleAmenity = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		dispatch({ type: 'TOGGLE_AMENITY', payload: e.target.value });
+	}, [dispatch]);
 
 	if (!isOpen) return null;
 
@@ -117,12 +122,14 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
 								step={PRICE_BOUNDS.STEP}
 								value={minPrice}
 								onChange={(e) =>
-									dispatch({
-										type: 'SET_MIN_PRICE',
-										payload: Math.min(
-											Number(e.target.value),
-											maxPrice - PRICE_BOUNDS.GAP,
-										),
+									startTransition(() => {
+										dispatch({
+											type: 'SET_MIN_PRICE',
+											payload: Math.min(
+												Number(e.target.value),
+												maxPrice - PRICE_BOUNDS.GAP,
+											),
+										})
 									})
 								}
 								style={{ pointerEvents: 'none' }}
@@ -136,12 +143,14 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
 								step={PRICE_BOUNDS.STEP}
 								value={maxPrice}
 								onChange={(e) =>
-									dispatch({
-										type: 'SET_MAX_PRICE',
-										payload: Math.max(
-											Number(e.target.value),
-											minPrice + PRICE_BOUNDS.GAP,
-										),
+									startTransition(() => {
+										dispatch({
+											type: 'SET_MAX_PRICE',
+											payload: Math.max(
+												Number(e.target.value),
+												minPrice + PRICE_BOUNDS.GAP,
+											),
+										})
 									})
 								}
 								style={{ pointerEvents: 'none' }}
@@ -327,10 +336,9 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
 									>
 										<input
 											type='checkbox'
+											value={item.id}
 											checked={amenities.includes(item.id)}
-											onChange={() =>
-												dispatch({ type: 'TOGGLE_AMENITY', payload: item.id })
-											}
+											onChange={handleToggleAmenity}
 											className='sr-only'
 										/>
 										<div
@@ -347,9 +355,9 @@ export default function FiltersModal({ isOpen, onClose }: FiltersModalProps) {
 											</span>
 											{item.label}
 										</div>
-										{amenities.includes(item.id) && (
+										{amenities.includes(item.id) ? (
 											<div className='absolute top-2 right-2 w-2 h-2 bg-[#006611] rounded-full'></div>
-										)}
+										) : null}
 									</label>
 								),
 							)}

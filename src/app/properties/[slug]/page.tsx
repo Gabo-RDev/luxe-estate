@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { getPropertyBySlug } from '@/api/properties.api';
 import Image from 'next/image';
 import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
@@ -15,18 +14,18 @@ export default async function PropertyDetailsPage({
 	params,
 	searchParams,
 }: PropertyDetailsPageProps) {
-	const { slug } = await params;
-	const property = await getPropertyBySlug(slug);
-
-	const cookieStore = await cookies();
+	const [p, cookieStore] = await Promise.all([params, cookies()]);
 	const locale = (cookieStore.get('NEXT_LOCALE')?.value as Locale) || 'es';
-	const dictionary = await getDictionary(locale);
+
+	const [property, dictionary] = await Promise.all([
+		getPropertyBySlug(p.slug),
+		getDictionary(locale),
+	]);
 
 	if (!property) {
 		// If no property is found by this slug, we assume it's a location route
 		// e.g. /properties/punta-cana
-		// We format 'punta-cana' to 'punta cana' for the database ilike search
-		const locationStr = slug.replace(/-/g, ' ');
+		const locationStr = p.slug.replace(/-/g, ' ');
 		const queryParams = await searchParams;
 
 		const combinedParams = Promise.resolve({

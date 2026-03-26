@@ -58,3 +58,9 @@ export const FILTER_KEYS = [
 	'page',
 ] as const;
 
+
+// ─── Authentication ─────────────────────────────────────────────────────────
+/** Default Supabase session duration (1 hour) */
+export const SESSION_DURATION_SECONDS = 3600;
+/** Refresh token expiration (1 year for default projects) */
+export const REFRESH_TOKEN_DURATION_DAYS = 365;
