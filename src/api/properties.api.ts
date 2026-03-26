@@ -15,8 +15,8 @@ function rowToProperty(row: PropertyRow): Property {
 	// property_images rows come back as [{ url, order }, ...], sorted by our query
 	const images: string[] =
 		row.property_images.length > 0
-			? [...row.property_images]
-					.sort((a, b) => a.order - b.order)
+			? row.property_images
+					.toSorted((a, b) => a.order - b.order)
 					.map((img) => img.url)
 			: [row.image_url];
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { Property } from '@/interfaces/Property.interface';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,7 +8,10 @@ import { useI18n } from '@/lib/i18n/i18n-context';
 
 import { PropertyCardProps } from '@/interfaces/PropertyCardProps.interface';
 
-export default function PropertyCard({
+// Hoist static JSX to avoid recreating on every render
+const CardOverlayShadow = () => <div className="absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60"></div>;
+
+const PropertyCard = memo(function PropertyCard({
 	property,
 	featuredMode = false,
 }: PropertyCardProps) {
@@ -38,7 +42,7 @@ export default function PropertyCard({
 					<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
 						<span className='material-icons text-xl'>favorite_border</span>
 					</button>
-					<div className='absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60'></div>
+					<CardOverlayShadow />
 				</div>
 				<div className='p-6 relative'>
 					<div className='flex justify-between items-start mb-2'>
@@ -137,4 +141,6 @@ export default function PropertyCard({
 			</div>
 		</Link>
 	);
-}
+});
+
+export default PropertyCard;
