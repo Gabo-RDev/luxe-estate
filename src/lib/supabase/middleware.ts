@@ -1,35 +1,48 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
+import { SESSION_DURATION_SECONDS } from '@/lib/constants';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
-
-export const createClient = (request: NextRequest) => {
-	// Create an unmodified response
+/**
+ * Refreshes the user session if it's expired.
+ * This should be called from Next.js middleware.
+ */
+export const updateSession = async (request: NextRequest) => {
+	// Let's create an initial response that we can modify
 	let supabaseResponse = NextResponse.next({
-		request: {
-			headers: request.headers,
-		},
+		request,
 	});
 
-	const supabase = createServerClient(supabaseUrl!, supabaseKey!, {
-		cookies: {
-			getAll() {
-				return request.cookies.getAll();
+	const supabase = createServerClient(
+		process.env.NEXT_PUBLIC_SUPABASE_URL!,
+		process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+		{
+			cookieOptions: {
+				maxAge: SESSION_DURATION_SECONDS,
 			},
-			setAll(cookiesToSet) {
-				cookiesToSet.forEach(({ name, value, options }) =>
-					request.cookies.set(name, value),
-				);
-				supabaseResponse = NextResponse.next({
-					request,
-				});
-				cookiesToSet.forEach(({ name, value, options }) =>
-					supabaseResponse.cookies.set(name, value, options),
-				);
+			cookies: {
+				getAll() {
+					return request.cookies.getAll();
+				},
+				setAll(cookiesToSet) {
+					cookiesToSet.forEach(({ name, value }) =>
+						request.cookies.set(name, value),
+					);
+					supabaseResponse = NextResponse.next({
+						request,
+					});
+					cookiesToSet.forEach(({ name, value, options }) =>
+						supabaseResponse.cookies.set(name, value, options),
+					);
+				},
 			},
 		},
-	});
+	);
+
+	// This will refresh the session if it is expired.
+	// We call getUser() because it's the safest way to ensure the session is valid
+	// and trigger the `setAll` call if a refresh happens.
+	// IMPORTANT: Don't call .getSession() or it won't refresh correctly in some edge cases.
+	await supabase.auth.getUser();
 
 	return supabaseResponse;
 };

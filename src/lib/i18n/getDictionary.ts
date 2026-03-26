@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 import { Locale } from '@/types/I18n';
 
 const dictionaries = {
@@ -7,6 +8,8 @@ const dictionaries = {
 	fr: () => import('./dictionaries/fr.json').then((module) => module.default),
 };
 
-export const getDictionary = async (locale: Locale) => {
+// React.cache() deduplicates calls within the same request — layout.tsx and
+// Navigation.tsx both call getDictionary, so this prevents a duplicate JSON read.
+export const getDictionary = cache(async (locale: Locale) => {
 	return (dictionaries[locale] || dictionaries.es)();
-};
+});

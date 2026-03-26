@@ -33,12 +33,12 @@ export default function PropertyMap({ location, lat, lng }: PropertyMapProps) {
 					url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 				/>
-				{hasCoords && (
+				{hasCoords ? (
 					<Marker
 						position={position}
 						icon={customIcon}
 					/>
-				)}
+				) : null}
 			</MapContainer>
 			<a
 				href={`https://maps.google.com/?q=${encodeURIComponent(location)}`}

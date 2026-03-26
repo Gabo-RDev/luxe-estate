@@ -1,25 +1,37 @@
-'use client';
-
 import { Property } from '@/interfaces/Property.interface';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useI18n } from '@/lib/i18n/i18n-context';
-
 import { PropertyCardProps } from '@/interfaces/PropertyCardProps.interface';
+import { BedIcon } from '@/components/ui/icons/BedIcon';
+import { BathIcon } from '@/components/ui/icons/BathIcon';
+import { AreaIcon } from '@/components/ui/icons/AreaIcon';
+import { LocationIcon } from '@/components/ui/icons/LocationIcon';
+import { FavoriteButton } from './FavoriteButton';
+
+// Hoist static JSX to avoid recreating on every render
+const CardOverlayShadow = () => (
+	<div className='absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60'></div>
+);
 
 export default function PropertyCard({
 	property,
 	featuredMode = false,
+	dictionary,
+	locale,
 }: PropertyCardProps) {
-	const { dictionary, locale } = useI18n();
+	const localizedTitle =
+		(property[`title_${locale}` as keyof Property] as string) || property.title;
+	const localizedLocation =
+		(property[`location_${locale}` as keyof Property] as string) ||
+		property.location;
 
-	const localizedTitle = property[`title_${locale}` as keyof Property] as string || property.title;
-	const localizedLocation = property[`location_${locale}` as keyof Property] as string || property.location;
-    
 	// If featuredMode is true, we use a larger card style with Hint of Green background for the highlights
 	if (featuredMode) {
 		return (
-			<Link href={`/properties/${property.slug}`} className='group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer block'>
+			<Link
+				href={`/properties/${property.slug}`}
+				className='group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer block'
+			>
 				<div className='aspect-4/3 w-full overflow-hidden relative'>
 					<Image
 						alt={property.title}
@@ -35,10 +47,8 @@ export default function PropertyCard({
 							</div>
 						) : null}
 					</div>
-					<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
-						<span className='material-icons text-xl'>favorite_border</span>
-					</button>
-					<div className='absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60'></div>
+					<FavoriteButton />
+					<CardOverlayShadow />
 				</div>
 				<div className='p-6 relative'>
 					<div className='flex justify-between items-start mb-2'>
@@ -47,8 +57,7 @@ export default function PropertyCard({
 								{localizedTitle}
 							</h3>
 							<p className='text-nordic/70 text-sm flex items-center gap-1 mt-1'>
-								<span className='material-icons text-sm'>place</span>{' '}
-								{localizedLocation}
+								<LocationIcon size={14} /> {localizedLocation}
 							</p>
 						</div>
 						<span className='text-xl font-semibold text-mosque'>
@@ -58,16 +67,15 @@ export default function PropertyCard({
 					</div>
 					<div className='flex items-center gap-4 sm:gap-6 flex-wrap mt-6 pt-6 border-t border-nordic/10'>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
-							<span className='material-icons text-lg'>king_bed</span>{' '}
-							{property.beds} {dictionary.property_card.beds}
+							<BedIcon size={18} /> {property.beds}{' '}
+							{dictionary.property_card.beds}
 						</div>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
-							<span className='material-icons text-lg'>bathtub</span>{' '}
-							{property.baths} {dictionary.property_card.baths}
+							<BathIcon size={18} /> {property.baths}{' '}
+							{dictionary.property_card.baths}
 						</div>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
-							<span className='material-icons text-lg'>square_foot</span>{' '}
-							{property.area.toLocaleString('en-US')} m²
+							<AreaIcon size={18} /> {property.area.toLocaleString('en-US')} m²
 						</div>
 					</div>
 				</div>
@@ -77,7 +85,10 @@ export default function PropertyCard({
 
 	// Regular card mode
 	return (
-		<Link href={`/properties/${property.slug}`} className='bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col'>
+		<Link
+			href={`/properties/${property.slug}`}
+			className='bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer h-full flex flex-col'
+		>
 			<div className='relative aspect-4/3 overflow-hidden'>
 				<Image
 					alt={property.title}
@@ -93,13 +104,14 @@ export default function PropertyCard({
 						</div>
 					) : null}
 				</div>
-				<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all z-20'>
-					<span className='material-icons text-xl'>favorite_border</span>
-				</button>
+				<FavoriteButton />
 				<div
 					className={`absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded ${property.listingType === 'Rent' ? 'bg-mosque/90' : 'bg-nordic/90'}`}
 				>
-					{dictionary.property_card.for} {property.listingType === 'Rent' ? dictionary.property_card.rent : dictionary.property_card.buy}
+					{dictionary.property_card.for}{' '}
+					{property.listingType === 'Rent'
+						? dictionary.property_card.rent
+						: dictionary.property_card.buy}
 				</div>
 			</div>
 			<div className='p-4 flex flex-col grow'>
@@ -120,17 +132,24 @@ export default function PropertyCard({
 
 				<div className='mt-auto flex items-center justify-between pt-3 border-t border-nordic/10'>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>
-						<span className='material-icons text-sm text-mosque'>king_bed</span>{' '}
+						<BedIcon
+							size={14}
+							className='text-mosque'
+						/>{' '}
 						{property.beds}
 					</div>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>
-						<span className='material-icons text-sm text-mosque'>bathtub</span>{' '}
+						<BathIcon
+							size={14}
+							className='text-mosque'
+						/>{' '}
 						{property.baths}
 					</div>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>
-						<span className='material-icons text-sm text-mosque'>
-							square_foot
-						</span>{' '}
+						<AreaIcon
+							size={14}
+							className='text-mosque'
+						/>{' '}
 						{property.area}m²
 					</div>
 				</div>
