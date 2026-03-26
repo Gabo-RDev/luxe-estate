@@ -64,7 +64,7 @@ export function NavActions({ user, dictionary }: NavActionsProps) {
 						</button>
 
 						<AnimatePresence>
-							{isProfileOpen && (
+							{isProfileOpen ? (
 								<>
 									<div
 										className='fixed inset-0 z-40'
@@ -114,7 +114,7 @@ export function NavActions({ user, dictionary }: NavActionsProps) {
 										</button>
 									</motion.div>
 								</>
-							)}
+							) : null}
 						</AnimatePresence>
 					</motion.div>
 				) : (

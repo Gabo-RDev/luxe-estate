@@ -8,6 +8,7 @@ import { CATEGORIES } from '@/lib/constants';
 export function useSearchFilters() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
+	const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
 
 	// 1. DERIVED STATE: No useState/useEffect needed (Rule 1 & 3)
 	const urlCategory = searchParams.get('type');
@@ -58,6 +59,8 @@ export function useSearchFilters() {
 		setSearchQuery,
 		handleCategoryClick,
 		handleSearchSubmit,
+		isFiltersModalOpen,
+		setIsFiltersModalOpen,
 		categories: CATEGORIES,
 	};
 }

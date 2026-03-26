@@ -1,22 +1,15 @@
-'use client';
+import { Suspense } from 'react';
+import { cookies } from 'next/headers';
+import { getDictionary } from '@/lib/i18n/getDictionary';
+import { defaultLocale, locales } from '@/lib/i18n/config';
+import { Locale } from '@/types/I18n';
+import { SearchHeroForm } from './SearchHeroForm';
 
-import { useState } from 'react';
-import FiltersModal from '@/features/properties/components/FiltersModal';
-import { useSearchFilters } from '@/hooks/useSearchFilters';
-import { useI18n } from '@/lib/i18n/i18n-context';
-import { SearchIcon, FilterIcon } from '@/components/ui/icons';
-
-export default function SearchHero() {
-	const { dictionary } = useI18n();
-	const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
-	const {
-		selectedCategory,
-		searchQuery,
-		setSearchQuery,
-		handleCategoryClick,
-		handleSearchSubmit,
-		categories,
-	} = useSearchFilters();
+export default async function SearchHero() {
+	const cookieStore = await cookies();
+	const localeCookie = cookieStore.get('NEXT_LOCALE')?.value as Locale;
+	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
+	const dictionary = await getDictionary(locale);
 
 	return (
 		<section className='py-8 md:py-16'>
@@ -32,57 +25,24 @@ export default function SearchHero() {
 					.
 				</h1>
 
-				<form
-					onSubmit={handleSearchSubmit}
-					className='relative group max-w-2xl mx-auto w-full'
+				<Suspense
+					fallback={
+						<div className='max-w-2xl mx-auto w-full space-y-8 animate-pulse'>
+							<div className='h-16 bg-white rounded-xl shadow-sm w-full'></div>
+							<div className='flex justify-center gap-3'>
+								{[1, 2, 3, 4].map((i) => (
+									<div
+										key={i}
+										className='h-9 w-24 bg-white border border-nordic/10 rounded-full'
+									></div>
+								))}
+							</div>
+						</div>
+					}
 				>
-					<div className='absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none'>
-						<SearchIcon size={24} className='text-nordic/60 group-focus-within:text-mosque transition-colors' />
-					</div>
-					<input
-						type='text'
-						placeholder={dictionary.search_hero.placeholder}
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						className='block w-full pl-12 pr-32 md:pr-36 py-4 rounded-xl border-none bg-white text-nordic shadow-sm placeholder-nordic/60 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg'
-					/>
-					<button
-						type='submit'
-						className='absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20 cursor-pointer'
-					>
-						{dictionary.search_hero.search}
-					</button>
-				</form>
-
-				<div className='flex items-center justify-start md:justify-center gap-3 overflow-x-auto hide-scroll py-2'>
-					{categories.map((cat: string) => (
-						<button
-							key={cat}
-							onClick={() => handleCategoryClick(cat)}
-							className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer capitalize ${
-								selectedCategory === cat
-									? 'bg-nordic text-white shadow-lg'
-									: 'bg-white border border-nordic/10 text-nordic/70 hover:text-nordic hover:border-mosque/50'
-							}`}
-						>
-							{dictionary.categories[cat as keyof typeof dictionary.categories]}
-						</button>
-					))}
-					<div className='w-px h-6 bg-nordic/10 mx-2'></div>
-					<button
-						onClick={() => setIsFiltersModalOpen(true)}
-						className='whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic font-medium text-sm hover:bg-white/50 transition-colors cursor-pointer'
-					>
-						<FilterIcon size={16} />{' '}
-						{dictionary.search_hero.filters}
-					</button>
-				</div>
+					<SearchHeroForm dictionary={dictionary} />
+				</Suspense>
 			</div>
-
-			<FiltersModal
-				isOpen={isFiltersModalOpen}
-				onClose={() => setIsFiltersModalOpen(false)}
-			/>
 		</section>
 	);
 }

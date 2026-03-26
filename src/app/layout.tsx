@@ -26,12 +26,17 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const supabase = await createClient();
-	const { data: { user } } = await supabase.auth.getUser();
-
 	const cookieStore = await cookies();
 	const localeCookie = cookieStore.get('NEXT_LOCALE')?.value as Locale;
 	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
-	const dictionary = await getDictionary(locale);
+
+	const [
+		{ data: { user } },
+		dictionary
+	] = await Promise.all([
+		supabase.auth.getUser(),
+		getDictionary(locale)
+	]);
 
 	return (
 		<html

@@ -29,7 +29,7 @@ export function LanguageSelector() {
 			</motion.button>
 
 			<AnimatePresence>
-				{isOpen && (
+				{isOpen ? (
 					<>
 						{/* Backdrop to close on outside click */}
 						<motion.div
@@ -69,7 +69,7 @@ export function LanguageSelector() {
 								>
 									<span className='text-base'>{flags[l]}</span>
 									<span>{localeNames[l]}</span>
-									{locale === l && (
+									{locale === l ? (
 										<motion.span
 											className='material-icons text-[14px] text-mosque ml-auto'
 											initial={{ scale: 0 }}
@@ -82,12 +82,12 @@ export function LanguageSelector() {
 										>
 											check
 										</motion.span>
-									)}
+									) : null}
 								</motion.button>
 							))}
 						</motion.div>
 					</>
-				)}
+				) : null}
 			</AnimatePresence>
 		</div>
 	);

@@ -55,7 +55,7 @@ export function MobileNav({ user, dictionary, navLinks }: MobileNavProps) {
 			</motion.button>
 
 			<AnimatePresence>
-				{isMobileMenuOpen && (
+				{isMobileMenuOpen ? (
 					<motion.div
 						key='mobile-menu'
 						className='lg:hidden absolute top-20 left-0 w-full bg-white border-b border-nordic/10 shadow-xl z-40 overflow-hidden'
@@ -134,7 +134,7 @@ export function MobileNav({ user, dictionary, navLinks }: MobileNavProps) {
 							)}
 						</div>
 					</motion.div>
-				)}
+				) : null}
 			</AnimatePresence>
 		</>
 	);

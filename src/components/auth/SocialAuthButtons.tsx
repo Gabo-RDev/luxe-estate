@@ -2,7 +2,8 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { Dictionary } from '@/types/I18n';
-import { GoogleIcon, GithubIcon } from '@/components/ui/icons';
+import { GoogleIcon } from '@/components/ui/icons/GoogleIcon';
+import { GithubIcon } from '@/components/ui/icons/GithubIcon';
 
 export function SocialAuthButtons({ dictionary }: { dictionary: Dictionary }) {
 	const supabase = createClient();

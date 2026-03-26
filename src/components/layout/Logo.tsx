@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { LogoIcon } from '@/components/ui/icons';
+import { LogoIcon } from '@/components/ui/icons/LogoIcon';
 
 export function Logo() {
 	const pathname = usePathname();

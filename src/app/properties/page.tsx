@@ -45,11 +45,11 @@ async function PropertiesGrid({
 export default async function PropertiesPage({
 	searchParams,
 }: PropertiesPageProps) {
-	const params = await searchParams;
+	const [params, cookieStore] = await Promise.all([searchParams, cookies()]);
+	
 	const parsedPage = parseInt(params.page ?? '', 10);
 	const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
 
-	const cookieStore = await cookies();
 	const localeCookie = cookieStore.get('NEXT_LOCALE')?.value as Locale;
 	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
 	const dictionary = await getDictionary(locale);
