@@ -11,7 +11,8 @@ import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
 import { cookies } from 'next/headers';
 import { getDictionary } from '@/lib/i18n/getDictionary';
 import { defaultLocale, locales } from '@/lib/i18n/config';
-import { Locale } from '@/types/I18n';
+import { Locale, Dictionary } from '@/types/I18n';
+
 
 import { HomeProps } from '@/interfaces/HomeProps.interface';
 
@@ -19,10 +20,15 @@ import { HomeProps } from '@/interfaces/HomeProps.interface';
 async function NewInMarketGrid({
 	currentPage,
 	filters,
+	dictionary,
+	locale,
 }: {
 	currentPage: number;
 	filters: PropertyFilters;
+	dictionary: Dictionary;
+	locale: Locale;
 }) {
+
 	const { data: newProperties, totalPages } = await getProperties(
 		currentPage,
 		PAGE_SIZE,
@@ -35,7 +41,10 @@ async function NewInMarketGrid({
 			<PropertyGrid
 				properties={newProperties}
 				currentPage={currentPage}
+				dictionary={dictionary}
+				locale={locale}
 			/>
+
 
 			{/* Pagination — scroll={false} on all Links to avoid jump-to-top */}
 			<Suspense fallback={null}>
@@ -120,7 +129,10 @@ export default async function Home({ searchParams }: HomeProps) {
 									key={property.id}
 									property={property}
 									featuredMode={true}
+									dictionary={dictionary}
+									locale={locale}
 								/>
+
 							))}
 						</div>
 					</section>
@@ -157,7 +169,10 @@ export default async function Home({ searchParams }: HomeProps) {
 						<NewInMarketGrid
 							currentPage={currentPage}
 							filters={filters}
+							dictionary={dictionary}
+							locale={locale}
 						/>
+
 					</Suspense>
 				</section>
 			</main>
