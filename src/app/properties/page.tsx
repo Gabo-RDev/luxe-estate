@@ -9,17 +9,23 @@ import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
 import { cookies } from 'next/headers';
 import { getDictionary } from '@/lib/i18n/getDictionary';
 import { defaultLocale, locales } from '@/lib/i18n/config';
-import { Locale } from '@/types/I18n';
+import { Locale, Dictionary } from '@/types/I18n';
+
 
 import { PropertiesPageProps } from '@/interfaces/PropertiesPageProps.interface';
 
 async function PropertiesGrid({
 	currentPage,
 	filters,
+	dictionary,
+	locale,
 }: {
 	currentPage: number;
 	filters: PropertyFilters;
+	dictionary: Dictionary;
+	locale: Locale;
 }) {
+
 	const { data: properties, totalPages } = await getProperties(
 		currentPage,
 		PAGE_SIZE,
@@ -31,7 +37,10 @@ async function PropertiesGrid({
 			<PropertyGrid
 				properties={properties}
 				currentPage={currentPage}
+				dictionary={dictionary}
+				locale={locale}
 			/>
+
 			<Suspense fallback={null}>
 				<Pagination
 					currentPage={currentPage}
@@ -86,7 +95,10 @@ export default async function PropertiesPage({
 					<PropertiesGrid
 						currentPage={currentPage}
 						filters={filters}
+						dictionary={dictionary}
+						locale={locale}
 					/>
+
 				</Suspense>
 			</main>
 		</div>

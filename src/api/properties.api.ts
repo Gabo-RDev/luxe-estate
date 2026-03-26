@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { Property } from '@/interfaces/Property.interface';
 import { PaginatedProperties } from '@/interfaces/PaginatedProperties.interface';
@@ -46,7 +47,7 @@ function rowToProperty(row: PropertyRow): Property {
 }
 
 /** Fetch all featured properties (no pagination needed — small set). */
-export async function getFeaturedProperties(): Promise<Property[]> {
+export const getFeaturedProperties = cache(async (): Promise<Property[]> => {
 	const supabase = await createClient();
 
 	const { data, error } = await supabase
@@ -61,14 +62,14 @@ export async function getFeaturedProperties(): Promise<Property[]> {
 	}
 
 	return (data ?? []).map(rowToProperty);
-}
+});
 
 /** Fetch non-featured properties with server-side pagination. */
-export async function getProperties(
+export const getProperties = cache(async (
 	page: number = 1,
 	pageSize: number = PAGE_SIZE,
 	filters?: PropertyFilters,
-): Promise<PaginatedProperties> {
+): Promise<PaginatedProperties> => {
 	const supabase = await createClient();
 
 	// Normalize inputs: guard against <= 0, NaN, or non-finite values; cap at MAX_PAGE_SIZE
@@ -89,27 +90,19 @@ export async function getProperties(
 		.eq('is_featured', false);
 
 	if (filters) {
-		if (filters.query) {
-			query = query.or(`title.ilike.%${filters.query}%,location.ilike.%${filters.query}%`);
+		const { query: q, location: loc, propertyType: type, minPrice, maxPrice, beds, baths } = filters;
+
+		if (q) query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
+		if (loc) query = query.ilike('location', `%${loc}%`);
+		
+		if (type && !['all', 'any type'].includes(type.toLowerCase())) {
+			query = query.eq('property_type', type);
 		}
-		if (filters.location) {
-			query = query.ilike('location', `%${filters.location}%`);
-		}
-		if (filters.propertyType && filters.propertyType !== 'any type' && filters.propertyType !== 'all') {
-			query = query.eq('property_type', filters.propertyType);
-		}
-		if (filters.minPrice !== undefined) {
-			query = query.gte('price', filters.minPrice);
-		}
-		if (filters.maxPrice !== undefined) {
-			query = query.lte('price', filters.maxPrice);
-		}
-		if (filters.beds && filters.beds > 0) {
-			query = query.gte('beds', filters.beds);
-		}
-		if (filters.baths && filters.baths > 0) {
-			query = query.gte('baths', filters.baths);
-		}
+
+		if (minPrice !== undefined) query = query.gte('price', minPrice);
+		if (maxPrice !== undefined) query = query.lte('price', maxPrice);
+		if (beds && beds > 0) query = query.gte('beds', beds);
+		if (baths && baths > 0) query = query.gte('baths', baths);
 	}
 
 	const { data, error, count } = await query
@@ -130,10 +123,10 @@ export async function getProperties(
 		totalPages,
 		currentPage: safePage,
 	};
-}
+});
 
 /** Fetch a single property by its slug. */
-export async function getPropertyBySlug(slug: string): Promise<Property | null> {
+export const getPropertyBySlug = cache(async (slug: string): Promise<Property | null> => {
 	const supabase = await createClient();
 
 	const { data, error } = await supabase
@@ -148,4 +141,4 @@ export async function getPropertyBySlug(slug: string): Promise<Property | null> 
 	}
 
 	return data ? rowToProperty(data) : null;
-}
+});
