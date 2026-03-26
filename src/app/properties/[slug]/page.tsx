@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import { getPropertyBySlug } from '@/api/properties.api';
-import Navigation from '@/components/layout/Navigation';
 import Image from 'next/image';
 import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
@@ -46,8 +45,6 @@ export default async function PropertyDetailsPage({
 
 	return (
 		<div className='bg-clear-day min-h-screen text-nordic selection:bg-mosque/20'>
-			<Navigation />
-
 			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				<div className='grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8'>
 					<div className='lg:col-span-8 space-y-4'>

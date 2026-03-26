@@ -104,5 +104,20 @@
 		"starting_from": "Starting from",
 		"with_down": "with 20% down",
 		"calculate_mortgage": "Calculate Mortgage"
+	},
+	"auth": {
+		"login": "Login",
+		"welcome": "Welcome to LuxeEstate",
+		"unlock": "Unlock exclusive properties worldwide.",
+		"continue_google": "Continue with Google",
+		"continue_github": "Continue with GitHub",
+		"no_account": "Don't have an account?",
+		"signup": "Sign up",
+		"privacy": "Privacy Policy",
+		"terms": "Terms of Service",
+		"help": "Help Center",
+		"account": "Account",
+		"my_profile": "My Profile",
+		"signout": "Sign out"
 	}
 }
