@@ -4,6 +4,7 @@ import { useState } from 'react';
 import FiltersModal from '@/features/properties/components/FiltersModal';
 import { useSearchFilters } from '@/hooks/useSearchFilters';
 import { useI18n } from '@/lib/i18n/i18n-context';
+import { SearchIcon, FilterIcon } from '@/components/ui/icons';
 
 export default function SearchHero() {
 	const { dictionary } = useI18n();
@@ -36,9 +37,7 @@ export default function SearchHero() {
 					className='relative group max-w-2xl mx-auto w-full'
 				>
 					<div className='absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none'>
-						<span className='material-icons text-nordic/60 text-2xl group-focus-within:text-mosque transition-colors'>
-							search
-						</span>
+						<SearchIcon size={24} className='text-nordic/60 group-focus-within:text-mosque transition-colors' />
 					</div>
 					<input
 						type='text'
@@ -74,7 +73,7 @@ export default function SearchHero() {
 						onClick={() => setIsFiltersModalOpen(true)}
 						className='whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic font-medium text-sm hover:bg-white/50 transition-colors cursor-pointer'
 					>
-						<span className='material-icons text-base'>tune</span>{' '}
+						<FilterIcon size={16} />{' '}
 						{dictionary.search_hero.filters}
 					</button>
 				</div>

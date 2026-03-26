@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useI18n } from '@/lib/i18n/i18n-context';
 
 import { PropertyCardProps } from '@/interfaces/PropertyCardProps.interface';
+import { BedIcon, BathIcon, AreaIcon, LocationIcon, HeartIcon } from '@/components/ui/icons';
 
 // Hoist static JSX to avoid recreating on every render
 const CardOverlayShadow = () => <div className="absolute bottom-0 inset-x-0 h-1/2 bg-linear-to-t from-black/60 to-transparent opacity-60"></div>;
@@ -40,7 +41,7 @@ const PropertyCard = memo(function PropertyCard({
 						) : null}
 					</div>
 					<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all'>
-						<span className='material-icons text-xl'>favorite_border</span>
+						<HeartIcon size={20} />
 					</button>
 					<CardOverlayShadow />
 				</div>
@@ -51,7 +52,7 @@ const PropertyCard = memo(function PropertyCard({
 								{localizedTitle}
 							</h3>
 							<p className='text-nordic/70 text-sm flex items-center gap-1 mt-1'>
-								<span className='material-icons text-sm'>place</span>{' '}
+								<LocationIcon size={14} />{' '}
 								{localizedLocation}
 							</p>
 						</div>
@@ -62,15 +63,15 @@ const PropertyCard = memo(function PropertyCard({
 					</div>
 					<div className='flex items-center gap-4 sm:gap-6 flex-wrap mt-6 pt-6 border-t border-nordic/10'>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
-							<span className='material-icons text-lg'>king_bed</span>{' '}
+							<BedIcon size={18} />{' '}
 							{property.beds} {dictionary.property_card.beds}
 						</div>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
-							<span className='material-icons text-lg'>bathtub</span>{' '}
+							<BathIcon size={18} />{' '}
 							{property.baths} {dictionary.property_card.baths}
 						</div>
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
-							<span className='material-icons text-lg'>square_foot</span>{' '}
+							<AreaIcon size={18} />{' '}
 							{property.area.toLocaleString('en-US')} m²
 						</div>
 					</div>
@@ -98,7 +99,7 @@ const PropertyCard = memo(function PropertyCard({
 					) : null}
 				</div>
 				<button onClick={(e) => e.preventDefault()} className='absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-nordic hover:bg-mosque hover:text-white transition-all z-20'>
-					<span className='material-icons text-xl'>favorite_border</span>
+					<HeartIcon size={20} />
 				</button>
 				<div
 					className={`absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded ${property.listingType === 'Rent' ? 'bg-mosque/90' : 'bg-nordic/90'}`}
@@ -124,17 +125,15 @@ const PropertyCard = memo(function PropertyCard({
 
 				<div className='mt-auto flex items-center justify-between pt-3 border-t border-nordic/10'>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>
-						<span className='material-icons text-sm text-mosque'>king_bed</span>{' '}
+						<BedIcon size={14} className='text-mosque' />{' '}
 						{property.beds}
 					</div>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>
-						<span className='material-icons text-sm text-mosque'>bathtub</span>{' '}
+						<BathIcon size={14} className='text-mosque' />{' '}
 						{property.baths}
 					</div>
 					<div className='flex items-center gap-1 text-nordic/80 text-xs'>
-						<span className='material-icons text-sm text-mosque'>
-							square_foot
-						</span>{' '}
+						<AreaIcon size={14} className='text-mosque' />{' '}
 						{property.area}m²
 					</div>
 				</div>

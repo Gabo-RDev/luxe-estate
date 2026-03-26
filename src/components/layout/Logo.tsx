@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { LogoIcon } from '@/components/ui/icons';
 
 export function Logo() {
 	const pathname = usePathname();
@@ -21,9 +22,7 @@ export function Logo() {
 			className='shrink-0 flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80'
 		>
 			<div className='w-8 h-8 rounded-lg bg-nordic flex items-center justify-center'>
-				<span className='material-icons text-white text-lg'>
-					apartment
-				</span>
+				<LogoIcon size={18} className='text-white' />
 			</div>
 			<span className='text-xl font-semibold tracking-tight text-nordic'>
 				LuxeEstate
