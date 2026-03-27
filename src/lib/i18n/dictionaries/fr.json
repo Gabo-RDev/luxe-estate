@@ -5,7 +5,9 @@
 		"properties": "Propriétés",
 		"contact": "Contact",
 		"prev": "Précédent",
-		"next": "Suivant"
+		"next": "Suivant",
+		"admin": "Tableau de Bord Admin",
+		"view_site": "Voir le Site Web"
 	},
 	"nav": {
 		"buy": "Acheter",

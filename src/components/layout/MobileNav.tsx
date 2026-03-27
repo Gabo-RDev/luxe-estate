@@ -8,11 +8,12 @@ import Link from 'next/link';
 
 interface MobileNavProps {
 	user: User | null;
+	userRole?: string | null;
 	dictionary: Dictionary;
 	navLinks: { label: string; href: string }[];
 }
 
-export function MobileNav({ user, dictionary, navLinks }: MobileNavProps) {
+export function MobileNav({ user, userRole, dictionary, navLinks }: MobileNavProps) {
 	const { pathname, isMobileMenuOpen, setIsMobileMenuOpen, handleSignOut } =
 		useNavigation();
 
@@ -93,26 +94,49 @@ export function MobileNav({ user, dictionary, navLinks }: MobileNavProps) {
 							<div className='h-px bg-nordic/10 my-4'></div>
 
 							{user ? (
-								<motion.div
-									initial={{ x: -16, opacity: 0 }}
-									animate={{ x: 0, opacity: 1 }}
-									transition={{
-										delay: 0.05 + navLinks.length * 0.06,
-										duration: 0.22,
-										ease: 'easeOut',
-									}}
-								>
-									<button
-										className='w-full text-left font-medium text-lg px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all flex items-center gap-2'
-										onClick={() => {
-											handleSignOut();
-											setIsMobileMenuOpen(false);
+								<div className='space-y-1'>
+									{userRole === 'administrator' && (
+										<motion.div
+											initial={{ x: -16, opacity: 0 }}
+											animate={{ x: 0, opacity: 1 }}
+											transition={{
+												delay: 0.05 + navLinks.length * 0.06,
+												duration: 0.22,
+												ease: 'easeOut',
+											}}
+										>
+											<Link
+												className='flex items-center gap-2 font-semibold text-lg px-4 py-3 rounded-xl text-mosque bg-mosque/5 hover:bg-mosque/10 transition-all'
+												href='/admin/properties'
+												onClick={() => setIsMobileMenuOpen(false)}
+											>
+												<span className='material-icons'>dashboard</span>
+												{dictionary.common.admin || 'Admin Dashboard'}
+											</Link>
+										</motion.div>
+									)}
+
+									<motion.div
+										initial={{ x: -16, opacity: 0 }}
+										animate={{ x: 0, opacity: 1 }}
+										transition={{
+											delay: 0.08 + navLinks.length * 0.06,
+											duration: 0.22,
+											ease: 'easeOut',
 										}}
 									>
-										<span className='material-icons'>logout</span>
-										{dictionary.auth.signout}
-									</button>
-								</motion.div>
+										<button
+											className='w-full text-left font-medium text-lg px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all flex items-center gap-2'
+											onClick={() => {
+												handleSignOut();
+												setIsMobileMenuOpen(false);
+											}}
+										>
+											<span className='material-icons'>logout</span>
+											{dictionary.auth.signout}
+										</button>
+									</motion.div>
+								</div>
 							) : (
 								<motion.div
 									initial={{ x: -16, opacity: 0 }}

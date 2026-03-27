@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Pagination from '@/components/ui/Pagination';
+import { TablePagination } from '@/components/ui/TablePagination';
 import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import PropertyGridSkeleton from '@/features/properties/components/PropertyGridSkeleton';
 import SearchHero from '@/features/properties/components/SearchHero';
@@ -26,7 +26,7 @@ async function PropertiesGrid({
 	locale: Locale;
 }) {
 
-	const { data: properties, totalPages } = await getProperties(
+	const { data: properties, totalPages, totalCount } = await getProperties(
 		currentPage,
 		PAGE_SIZE,
 		filters,
@@ -42,9 +42,12 @@ async function PropertiesGrid({
 			/>
 
 			<Suspense fallback={null}>
-				<Pagination
+				<TablePagination
 					currentPage={currentPage}
 					totalPages={totalPages}
+					totalResults={totalCount}
+					pageSize={PAGE_SIZE}
+					className="mt-12 px-6 py-4 border border-nordic/5 rounded-xl shadow-sm flex items-center justify-between bg-white"
 				/>
 			</Suspense>
 		</>

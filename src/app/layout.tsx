@@ -38,6 +38,17 @@ export default async function RootLayout({
 		getDictionary(locale)
 	]);
 
+	// Fetch role if user exists
+	let userRole = null;
+	if (user) {
+		const { data: roleData } = await supabase
+			.from('user_roles')
+			.select('role')
+			.eq('user_id', user.id)
+			.single();
+		userRole = roleData?.role;
+	}
+
 	return (
 		<html
 			lang={locale}
@@ -49,6 +60,7 @@ export default async function RootLayout({
 				<link
 					href='https://fonts.googleapis.com/icon?family=Material+Icons'
 					rel='stylesheet'
+					crossOrigin='anonymous'
 				/>
 				<link
 					href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap'
@@ -64,7 +76,7 @@ export default async function RootLayout({
 					locale={locale}
 					dictionary={dictionary}
 				>
-					<Navigation user={user} />
+					<Navigation user={user} userRole={userRole} />
 					{children}
 				</I18nProvider>
 			</body>
