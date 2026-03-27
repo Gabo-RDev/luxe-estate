@@ -5,7 +5,9 @@
 		"properties": "Properties",
 		"contact": "Contact",
 		"prev": "Prev",
-		"next": "Next"
+		"next": "Next",
+		"admin": "Admin Dashboard",
+		"view_site": "View Website"
 	},
 	"nav": {
 		"buy": "Buy",

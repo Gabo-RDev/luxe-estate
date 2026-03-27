@@ -42,7 +42,42 @@ export const updateSession = async (request: NextRequest) => {
 	// We call getUser() because it's the safest way to ensure the session is valid
 	// and trigger the `setAll` call if a refresh happens.
 	// IMPORTANT: Don't call .getSession() or it won't refresh correctly in some edge cases.
-	await supabase.auth.getUser();
+	const { data: { user } } = await supabase.auth.getUser();
+
+	let redirectUrl: URL | undefined = undefined;
+
+	// Role validation & route protection
+	if (!user && request.nextUrl.pathname.startsWith('/admin')) {
+		redirectUrl = new URL('/login', request.url);
+	} else if (user && request.nextUrl.pathname === '/login') {
+		redirectUrl = new URL('/', request.url);
+	} else if (user) {
+		// Try to fetch existing role (now guaranteed by DB trigger)
+		const { data: roleData } = await supabase
+			.from('user_roles')
+			.select('role, status')
+			.eq('user_id', user.id)
+			.single();
+
+		const userRole = roleData?.role;
+		const userStatus = roleData?.status;
+
+		// Protect admin routes
+		if (request.nextUrl.pathname.startsWith('/admin')) {
+			if (userRole !== 'administrator' || userStatus !== 'active') {
+				redirectUrl = new URL('/', request.url);
+			}
+		}
+	}
+
+	if (redirectUrl) {
+		const redirectResponse = NextResponse.redirect(redirectUrl);
+		// Carry over any cookies set by Supabase standard middleware process
+		supabaseResponse.cookies.getAll().forEach((cookie) => {
+			redirectResponse.cookies.set(cookie.name, cookie.value);
+		});
+		return redirectResponse;
+	}
 
 	return supabaseResponse;
 };
