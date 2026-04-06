@@ -9,15 +9,14 @@ import type { Dictionary } from '@/types/I18n';
 
 interface NavActionsProps {
 	user: User | null;
+	userRole?: string | null;
 	dictionary: Dictionary;
 }
 
-export function NavActions({ user, dictionary }: NavActionsProps) {
-	const {
-		isProfileOpen,
-		setIsProfileOpen,
-		handleSignOut,
-	} = useNavigation();
+export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
+	const { isProfileOpen, setIsProfileOpen, handleSignOut } = useNavigation();
+
+	const isAdmin = userRole === 'administrator';
 
 	return (
 		<div className='flex items-center space-x-1 md:space-x-3'>
@@ -47,7 +46,7 @@ export function NavActions({ user, dictionary }: NavActionsProps) {
 					>
 						<button
 							className='hidden md:flex items-center justify-center group relative cursor-pointer'
-							onClick={() => setIsProfileOpen(prev => !prev)}
+							onClick={() => setIsProfileOpen((prev) => !prev)}
 							title='User profile'
 						>
 							<div className='w-9 h-9 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent group-hover:ring-mosque transition-all'>
@@ -64,57 +63,81 @@ export function NavActions({ user, dictionary }: NavActionsProps) {
 						</button>
 
 						<AnimatePresence>
-							{isProfileOpen ? (
+							{isProfileOpen && (
 								<>
+									{/* Full-screen backdrop with explicit dimensions to bypass containing blocks */}
 									<div
-										className='fixed inset-0 z-40'
-										onClick={() => setIsProfileOpen(false)}
+										className='fixed left-0! top-0! w-screen! h-screen! z-100 bg-black/0 cursor-default'
+										onClick={(e) => {
+											e.stopPropagation();
+											setIsProfileOpen(false);
+										}}
 									/>
 									<motion.div
 										initial={{ opacity: 0, y: 10, scale: 0.95 }}
 										animate={{ opacity: 1, y: 0, scale: 1 }}
 										exit={{ opacity: 0, y: 10, scale: 0.95 }}
 										transition={{ duration: 0.15, ease: 'easeOut' }}
-										className='absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-nordic/10 z-50 overflow-hidden'
+										className='absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-nordic/10 z-101 overflow-hidden'
 									>
-										<div className='px-4 pt-4 pb-3 border-b border-nordic/5'>
-											<p className='text-xs font-semibold text-nordic/40 uppercase tracking-wider'>
-												{dictionary.auth.account}
+										<div className='px-6 pt-5 pb-4 border-b border-nordic/5 flex flex-col'>
+											<p className='text-[10px] font-bold text-nordic/30 uppercase tracking-widest mb-1'>
+												{dictionary.auth.account || 'ACCOUNT'}
 											</p>
-											<p className='text-sm font-semibold text-nordic truncate'>
+											<p className='text-base font-bold text-nordic truncate leading-tight'>
 												{user.user_metadata?.full_name ||
 													user.user_metadata?.name ||
 													'User'}
 											</p>
-											<p className='text-xs text-nordic/50 truncate'>
+											<p className='text-xs text-nordic/40 truncate mt-0.5 font-medium'>
 												{user.email}
 											</p>
 										</div>
-										<Link
-											href='/profile'
-											className='flex items-center gap-3 px-4 py-2.5 text-sm text-nordic transition-colors cursor-pointer hover:bg-gray-300/65 '
-											onClick={() => setIsProfileOpen(false)}
-										>
-											<span className='material-icons text-lg text-nordic/40'>
-												person_outline
-											</span>
-											{dictionary.auth.my_profile}
-										</Link>
-										<button
-											className='w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-gray-300/65 transition-colors cursor-pointer'
-											onClick={() => {
-												handleSignOut();
-												setIsProfileOpen(false);
-											}}
-										>
-											<span className='material-icons text-lg'>
-												logout
-											</span>
-											{dictionary.auth.signout}
-										</button>
+
+										<div className='py-2'>
+											{/* Admin Dashboard Access */}
+											{isAdmin && (
+												<Link
+													href='/admin/properties'
+													className='flex items-center gap-3 px-6 py-3 text-sm font-semibold text-mosque hover:bg-mosque/5 transition-colors'
+													onClick={() => setIsProfileOpen(false)}
+												>
+													<span className='material-icons text-xl'>
+														dashboard
+													</span>
+													{dictionary.common.admin || 'Admin Dashboard'}
+												</Link>
+											)}
+
+											<Link
+												href='/profile'
+												className='flex items-center gap-3 px-6 py-3 text-sm font-medium text-nordic/70 hover:text-nordic hover:bg-gray-50 transition-colors'
+												onClick={() => setIsProfileOpen(false)}
+											>
+												<span className='material-icons text-xl text-nordic/30'>
+													person_outline
+												</span>
+												{dictionary.auth.my_profile}
+											</Link>
+										</div>
+
+										<div className='border-t border-nordic/5 py-2'>
+											<button
+												className='w-full flex items-center gap-3 px-6 py-3 text-sm font-semibold text-red-500 hover:bg-red-50/50 transition-colors cursor-pointer group'
+												onClick={() => {
+													handleSignOut();
+													setIsProfileOpen(false);
+												}}
+											>
+												<span className='material-icons text-xl text-red-400 group-hover:text-red-500 transition-colors'>
+													logout
+												</span>
+												{dictionary.auth.signout}
+											</button>
+										</div>
 									</motion.div>
 								</>
-							) : null}
+							)}
 						</AnimatePresence>
 					</motion.div>
 				) : (

@@ -5,7 +5,9 @@
 		"properties": "Propiedades",
 		"contact": "Contacto",
 		"prev": "Anterior",
-		"next": "Siguiente"
+		"next": "Siguiente",
+		"admin": "Panel de Admin",
+		"view_site": "Ver Sitio Web"
 	},
 	"nav": {
 		"buy": "Comprar",

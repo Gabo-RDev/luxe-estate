@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useI18n } from '@/lib/i18n/i18n-context';
 import { buildPageNumbers } from '@/utils/pagination';
 import { PaginationProps } from '@/interfaces/PaginationProps.interface';
+import { animate } from 'framer-motion';
 
 export default function Pagination({
 	currentPage,
@@ -16,11 +17,20 @@ export default function Pagination({
 	if (totalPages <= 1) return null;
 
 	const handlePageClick = () => {
-		// Smooth-scroll to the section header after each page change
-		const section = document.getElementById('new-in-market');
-		if (section) {
-			section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		// Use Framer Motion for an ultra-smooth, custom-eased scroll
+		const targetId = document.getElementById('admin-list-top') || document.getElementById('new-in-market');
+		
+		let yOffset = 0;
+		if (targetId) {
+			// Offset slightly so the header isn't flush with the top of viewport (e.g. 80px)
+			yOffset = targetId.getBoundingClientRect().top + window.scrollY - 80;
 		}
+
+		animate(window.scrollY, Math.max(0, yOffset), {
+			duration: 0.8,
+			ease: [0.16, 1, 0.3, 1], // Custom sleek easing curve (like a smooth spring)
+			onUpdate: (latest) => window.scrollTo(0, latest),
+		});
 	};
 
 	const buildPageUrl = (page: number) => {

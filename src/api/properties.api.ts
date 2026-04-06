@@ -142,3 +142,43 @@ export const getPropertyBySlug = cache(async (slug: string): Promise<Property | 
 
 	return data ? rowToProperty(data) : null;
 });
+
+/** Fetch all properties for admin management (ordered by creation date). */
+export const getAdminProperties = cache(async (
+	page: number = 1,
+	pageSize: number = PAGE_SIZE,
+): Promise<PaginatedProperties> => {
+	const supabase = await createClient();
+
+	const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+	const safePageSize = Math.min(
+		Number.isFinite(pageSize) && pageSize >= 1
+			? Math.floor(pageSize)
+			: PAGE_SIZE,
+		MAX_PAGE_SIZE,
+	);
+
+	const from = (safePage - 1) * safePageSize;
+	const to = from + safePageSize - 1;
+
+	const { data, error, count } = await supabase
+		.from('properties')
+		.select('*, property_images(url, order)', { count: 'exact' })
+		.order('created_at', { ascending: false })
+		.range(from, to);
+
+	if (error) {
+		console.error('[getAdminProperties]', error.message);
+		return { data: [], totalCount: 0, totalPages: 0, currentPage: safePage };
+	}
+
+	const totalCount = count ?? 0;
+	const totalPages = Math.ceil(totalCount / safePageSize);
+
+	return {
+		data: (data ?? []).map(rowToProperty),
+		totalCount,
+		totalPages,
+		currentPage: safePage,
+	};
+});
