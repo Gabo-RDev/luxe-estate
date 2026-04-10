@@ -31,23 +31,19 @@ export default async function RootLayout({
 	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
 
 	const [
-		{ data: { user } },
-		dictionary
+		{
+			data: { user },
+		},
+		dictionary,
+		{ data: roleData },
 	] = await Promise.all([
 		supabase.auth.getUser(),
-		getDictionary(locale)
+		getDictionary(locale),
+		supabase.from('user_roles').select('role').maybeSingle(),
 	]);
 
 	// Fetch role if user exists
-	let userRole = null;
-	if (user) {
-		const { data: roleData } = await supabase
-			.from('user_roles')
-			.select('role')
-			.eq('user_id', user.id)
-			.single();
-		userRole = roleData?.role;
-	}
+	const userRole = user ? roleData?.role : null;
 
 	return (
 		<html
@@ -62,21 +58,16 @@ export default async function RootLayout({
 					rel='stylesheet'
 					crossOrigin='anonymous'
 				/>
-				<link
-					href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap'
-					rel='stylesheet'
-				/>
-				<link
-					href='https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0'
-					rel='stylesheet'
-				/>
 			</head>
 			<body className='antialiased selection:bg-mosque selection:text-white overflow-x-hidden'>
 				<I18nProvider
 					locale={locale}
 					dictionary={dictionary}
 				>
-					<Navigation user={user} userRole={userRole} />
+					<Navigation
+						user={user}
+						userRole={userRole}
+					/>
 					{children}
 				</I18nProvider>
 			</body>

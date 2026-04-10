@@ -43,6 +43,10 @@ function rowToProperty(row: PropertyRow): Property {
 		isFeatured: row.is_featured,
 		lat: row.lat ?? undefined,
 		lng: row.lng ?? undefined,
+		description: row.description ?? undefined,
+		yearBuilt: row.year_built ?? undefined,
+		parkingSpaces: row.parking_spaces ?? undefined,
+		amenities: row.amenities ?? undefined,
 	};
 }
 
@@ -65,120 +69,173 @@ export const getFeaturedProperties = cache(async (): Promise<Property[]> => {
 });
 
 /** Fetch non-featured properties with server-side pagination. */
-export const getProperties = cache(async (
-	page: number = 1,
-	pageSize: number = PAGE_SIZE,
-	filters?: PropertyFilters,
-): Promise<PaginatedProperties> => {
-	const supabase = await createClient();
+export const getProperties = cache(
+	async (
+		page: number = 1,
+		pageSize: number = PAGE_SIZE,
+		filters?: PropertyFilters,
+	): Promise<PaginatedProperties> => {
+		const supabase = await createClient();
 
-	// Normalize inputs: guard against <= 0, NaN, or non-finite values; cap at MAX_PAGE_SIZE
-	const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-	const safePageSize = Math.min(
-		Number.isFinite(pageSize) && pageSize >= 1
-			? Math.floor(pageSize)
-			: PAGE_SIZE,
-		MAX_PAGE_SIZE,
-	);
+		// Normalize inputs: guard against <= 0, NaN, or non-finite values; cap at MAX_PAGE_SIZE
+		const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+		const safePageSize = Math.min(
+			Number.isFinite(pageSize) && pageSize >= 1
+				? Math.floor(pageSize)
+				: PAGE_SIZE,
+			MAX_PAGE_SIZE,
+		);
 
-	const from = (safePage - 1) * safePageSize;
-	const to = from + safePageSize - 1;
+		const from = (safePage - 1) * safePageSize;
+		const to = from + safePageSize - 1;
 
-	let query = supabase
-		.from('properties')
-		.select('*, property_images(url, order)', { count: 'exact' })
-		.eq('is_featured', false);
+		let query = supabase
+			.from('properties')
+			.select('*, property_images(url, order)', { count: 'exact' })
+			.eq('is_featured', false);
 
-	if (filters) {
-		const { query: q, location: loc, propertyType: type, minPrice, maxPrice, beds, baths } = filters;
+		if (filters) {
+			const {
+				query: q,
+				location: loc,
+				propertyType: type,
+				minPrice,
+				maxPrice,
+				beds,
+				baths,
+				listingType,
+				savedIds,
+			} = filters;
 
-		if (q) query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
-		if (loc) query = query.ilike('location', `%${loc}%`);
-		
-		if (type && !['all', 'any type'].includes(type.toLowerCase())) {
-			query = query.eq('property_type', type);
+			if (q) query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
+			if (loc) query = query.ilike('location', `%${loc}%`);
+
+			if (type && !['all', 'any type'].includes(type.toLowerCase())) {
+				query = query.eq('property_type', type);
+			}
+
+			if (minPrice !== undefined) query = query.gte('price', minPrice);
+			if (maxPrice !== undefined) query = query.lte('price', maxPrice);
+			if (beds && beds > 0) query = query.gte('beds', beds);
+			if (baths && baths > 0) query = query.gte('baths', baths);
+
+			if (listingType) query = query.eq('listing_type', listingType);
+
+			if (savedIds) {
+				if (savedIds.length > 0) {
+					query = query.in('id', savedIds);
+				} else {
+					// If filtering by favorites but array is empty, force empty result
+					query = query.in('id', ['00000000-0000-0000-0000-000000000000']);
+				}
+			}
 		}
 
-		if (minPrice !== undefined) query = query.gte('price', minPrice);
-		if (maxPrice !== undefined) query = query.lte('price', maxPrice);
-		if (beds && beds > 0) query = query.gte('beds', beds);
-		if (baths && baths > 0) query = query.gte('baths', baths);
-	}
+		const { data, error, count } = await query
+			.order('created_at', { ascending: true })
+			.range(from, to);
 
-	const { data, error, count } = await query
-		.order('created_at', { ascending: true })
-		.range(from, to);
+		if (error) {
+			console.error('[getProperties]', error.message);
+			return { data: [], totalCount: 0, totalPages: 0, currentPage: safePage };
+		}
 
-	if (error) {
-		console.error('[getProperties]', error.message);
-		return { data: [], totalCount: 0, totalPages: 0, currentPage: safePage };
-	}
+		const totalCount = count ?? 0;
+		const totalPages = Math.ceil(totalCount / safePageSize);
 
-	const totalCount = count ?? 0;
-	const totalPages = Math.ceil(totalCount / safePageSize);
-
-	return {
-		data: (data ?? []).map(rowToProperty),
-		totalCount,
-		totalPages,
-		currentPage: safePage,
-	};
-});
+		return {
+			data: (data ?? []).map(rowToProperty),
+			totalCount,
+			totalPages,
+			currentPage: safePage,
+		};
+	},
+);
 
 /** Fetch a single property by its slug. */
-export const getPropertyBySlug = cache(async (slug: string): Promise<Property | null> => {
-	const supabase = await createClient();
+export const getPropertyBySlug = cache(
+	async (slug: string): Promise<Property | null> => {
+		const supabase = await createClient();
 
-	const { data, error } = await supabase
-		.from('properties')
-		.select('*, property_images(url, order)')
-		.eq('slug', slug)
-		.maybeSingle();
+		const { data, error } = await supabase
+			.from('properties')
+			.select('*, property_images(url, order)')
+			.eq('slug', slug)
+			.maybeSingle();
 
-	if (error) {
-		console.error(`[getPropertyBySlug] Error fetching property for slug "${slug}":`, error.message);
-		return null;
-	}
+		if (error) {
+			console.error(
+				`[getPropertyBySlug] Error fetching property for slug "${slug}":`,
+				error.message,
+			);
+			return null;
+		}
 
-	return data ? rowToProperty(data) : null;
-});
+		return data ? rowToProperty(data) : null;
+	},
+);
+
+/** Fetch a single property by its ID. */
+export const getPropertyById = cache(
+	async (id: string): Promise<Property | null> => {
+		const supabase = await createClient();
+
+		const { data, error } = await supabase
+			.from('properties')
+			.select('*, property_images(url, order)')
+			.eq('id', id)
+			.maybeSingle();
+
+		if (error) {
+			console.error(
+				`[getPropertyById] Error fetching property for id "${id}":`,
+				error.message,
+			);
+			return null;
+		}
+
+		return data ? rowToProperty(data) : null;
+	},
+);
 
 /** Fetch all properties for admin management (ordered by creation date). */
-export const getAdminProperties = cache(async (
-	page: number = 1,
-	pageSize: number = PAGE_SIZE,
-): Promise<PaginatedProperties> => {
-	const supabase = await createClient();
+export const getAdminProperties = cache(
+	async (
+		page: number = 1,
+		pageSize: number = PAGE_SIZE,
+	): Promise<PaginatedProperties> => {
+		const supabase = await createClient();
 
-	const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-	const safePageSize = Math.min(
-		Number.isFinite(pageSize) && pageSize >= 1
-			? Math.floor(pageSize)
-			: PAGE_SIZE,
-		MAX_PAGE_SIZE,
-	);
+		const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+		const safePageSize = Math.min(
+			Number.isFinite(pageSize) && pageSize >= 1
+				? Math.floor(pageSize)
+				: PAGE_SIZE,
+			MAX_PAGE_SIZE,
+		);
 
-	const from = (safePage - 1) * safePageSize;
-	const to = from + safePageSize - 1;
+		const from = (safePage - 1) * safePageSize;
+		const to = from + safePageSize - 1;
 
-	const { data, error, count } = await supabase
-		.from('properties')
-		.select('*, property_images(url, order)', { count: 'exact' })
-		.order('created_at', { ascending: false })
-		.range(from, to);
+		const { data, error, count } = await supabase
+			.from('properties')
+			.select('*, property_images(url, order)', { count: 'exact' })
+			.order('created_at', { ascending: false })
+			.range(from, to);
 
-	if (error) {
-		console.error('[getAdminProperties]', error.message);
-		return { data: [], totalCount: 0, totalPages: 0, currentPage: safePage };
-	}
+		if (error) {
+			console.error('[getAdminProperties]', error.message);
+			return { data: [], totalCount: 0, totalPages: 0, currentPage: safePage };
+		}
 
-	const totalCount = count ?? 0;
-	const totalPages = Math.ceil(totalCount / safePageSize);
+		const totalCount = count ?? 0;
+		const totalPages = Math.ceil(totalCount / safePageSize);
 
-	return {
-		data: (data ?? []).map(rowToProperty),
-		totalCount,
-		totalPages,
-		currentPage: safePage,
-	};
-});
+		return {
+			data: (data ?? []).map(rowToProperty),
+			totalCount,
+			totalPages,
+			currentPage: safePage,
+		};
+	},
+);

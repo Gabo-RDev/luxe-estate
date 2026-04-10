@@ -4,8 +4,15 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigation } from '@/hooks/useNavigation';
 import { LanguageSelector } from '../ui/LanguageSelector';
+import { NotificationsDropdown } from './NotificationsDropdown';
 import type { User } from '@supabase/supabase-js';
 import type { Dictionary } from '@/types/I18n';
+import dynamic from 'next/dynamic';
+
+const ProfileDropdownContent = dynamic(
+	() => import('./ProfileDropdownContent'),
+	{ ssr: false },
+);
 
 interface NavActionsProps {
 	user: User | null;
@@ -27,10 +34,7 @@ export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 				<span className='material-icons'>search</span>
 			</button>
 
-			<button className='hidden md:flex w-10 h-10 items-center justify-center text-nordic hover:text-mosque hover:bg-nordic/5 rounded-full transition-colors relative cursor-pointer'>
-				<span className='material-icons'>notifications_none</span>
-				<span className='absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-clear-day'></span>
-			</button>
+			<NotificationsDropdown variant='public' />
 
 			<div className='hidden md:block h-6 w-px bg-nordic/10 mx-1 md:mx-3'></div>
 
@@ -62,83 +66,15 @@ export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 							</div>
 						</button>
 
-						<AnimatePresence>
-							{isProfileOpen && (
-								<>
-									{/* Full-screen backdrop with explicit dimensions to bypass containing blocks */}
-									<div
-										className='fixed left-0! top-0! w-screen! h-screen! z-100 bg-black/0 cursor-default'
-										onClick={(e) => {
-											e.stopPropagation();
-											setIsProfileOpen(false);
-										}}
-									/>
-									<motion.div
-										initial={{ opacity: 0, y: 10, scale: 0.95 }}
-										animate={{ opacity: 1, y: 0, scale: 1 }}
-										exit={{ opacity: 0, y: 10, scale: 0.95 }}
-										transition={{ duration: 0.15, ease: 'easeOut' }}
-										className='absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-nordic/10 z-101 overflow-hidden'
-									>
-										<div className='px-6 pt-5 pb-4 border-b border-nordic/5 flex flex-col'>
-											<p className='text-[10px] font-bold text-nordic/30 uppercase tracking-widest mb-1'>
-												{dictionary.auth.account || 'ACCOUNT'}
-											</p>
-											<p className='text-base font-bold text-nordic truncate leading-tight'>
-												{user.user_metadata?.full_name ||
-													user.user_metadata?.name ||
-													'User'}
-											</p>
-											<p className='text-xs text-nordic/40 truncate mt-0.5 font-medium'>
-												{user.email}
-											</p>
-										</div>
-
-										<div className='py-2'>
-											{/* Admin Dashboard Access */}
-											{isAdmin && (
-												<Link
-													href='/admin/properties'
-													className='flex items-center gap-3 px-6 py-3 text-sm font-semibold text-mosque hover:bg-mosque/5 transition-colors'
-													onClick={() => setIsProfileOpen(false)}
-												>
-													<span className='material-icons text-xl'>
-														dashboard
-													</span>
-													{dictionary.common.admin || 'Admin Dashboard'}
-												</Link>
-											)}
-
-											<Link
-												href='/profile'
-												className='flex items-center gap-3 px-6 py-3 text-sm font-medium text-nordic/70 hover:text-nordic hover:bg-gray-50 transition-colors'
-												onClick={() => setIsProfileOpen(false)}
-											>
-												<span className='material-icons text-xl text-nordic/30'>
-													person_outline
-												</span>
-												{dictionary.auth.my_profile}
-											</Link>
-										</div>
-
-										<div className='border-t border-nordic/5 py-2'>
-											<button
-												className='w-full flex items-center gap-3 px-6 py-3 text-sm font-semibold text-red-500 hover:bg-red-50/50 transition-colors cursor-pointer group'
-												onClick={() => {
-													handleSignOut();
-													setIsProfileOpen(false);
-												}}
-											>
-												<span className='material-icons text-xl text-red-400 group-hover:text-red-500 transition-colors'>
-													logout
-												</span>
-												{dictionary.auth.signout}
-											</button>
-										</div>
-									</motion.div>
-								</>
-							)}
-						</AnimatePresence>
+						{isProfileOpen && (
+							<ProfileDropdownContent
+								user={user}
+								isAdmin={isAdmin}
+								dictionary={dictionary}
+								onClose={() => setIsProfileOpen(false)}
+								onSignOut={handleSignOut}
+							/>
+						)}
 					</motion.div>
 				) : (
 					<motion.div

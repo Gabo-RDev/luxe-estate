@@ -5,12 +5,20 @@ import { MobileNav } from './MobileNav';
 import type { User } from '@supabase/supabase-js';
 import type { Dictionary } from '@/types/I18n';
 
-export function PublicNav({ user, userRole, dictionary }: { user: User | null, userRole?: string | null, dictionary: Dictionary }) {
+export function PublicNav({
+	user,
+	userRole,
+	dictionary,
+}: {
+	user: User | null;
+	userRole?: string | null;
+	dictionary: Dictionary;
+}) {
 	const navLinks = [
-		{ label: dictionary.nav.buy, href: '/properties' },
-		{ label: dictionary.nav.rent, href: '#' },
-		{ label: dictionary.nav.sell, href: '#' },
-		{ label: dictionary.nav.saved, href: '#' },
+		{ label: dictionary.nav.buy, href: '/properties?listingType=Sale' },
+		{ label: dictionary.nav.rent, href: '/properties?listingType=Rent' },
+		{ label: dictionary.nav.sell, href: '/properties?listingType=Sale' },
+		{ label: dictionary.nav.saved, href: '/properties?saved=true' },
 	];
 
 	return (

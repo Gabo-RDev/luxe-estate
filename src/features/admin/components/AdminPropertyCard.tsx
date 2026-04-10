@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Property } from '@/interfaces/Property.interface';
 import { formatCurrency } from '@/utils/formatters';
 
@@ -81,12 +82,13 @@ export function AdminPropertyCard({ property }: AdminPropertyCardProps) {
 
 			{/* Actions */}
 			<div className='col-span-12 md:col-span-2 flex items-center justify-end gap-2'>
-				<button
+				<Link
+					href={`/admin/properties/${property.id}/edit`}
 					className='p-2 rounded-lg text-gray-400 hover:text-mosque hover:bg-hint-of-green/50 transition-all cursor-pointer'
 					title='Edit Property'
 				>
 					<span className='material-icons text-xl'>edit</span>
-				</button>
+				</Link>
 				<button
 					className='p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all cursor-pointer'
 					title='Delete Property'

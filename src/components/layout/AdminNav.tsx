@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigation } from '@/hooks/useNavigation';
 import { LanguageSelector } from '../ui/LanguageSelector';
+import { NotificationsDropdown } from './NotificationsDropdown';
 import type { User } from '@supabase/supabase-js';
 import type { Dictionary } from '@/types/I18n';
 
@@ -65,9 +66,7 @@ export function AdminNav({ user, userRole, dictionary }: AdminNavProps) {
 
 					{/* Secondary Nav / Profile */}
 					<div className='flex items-center gap-4'>
-						<button className='p-2 rounded-full text-nordic/40 hover:text-mosque hover:bg-mosque/5 transition-colors cursor-pointer'>
-							<span className='material-icons text-xl'>notifications_none</span>
-						</button>
+						<NotificationsDropdown variant='admin' />
 
 						<div className='hidden sm:block'>
 							<LanguageSelector />
@@ -104,8 +103,8 @@ export function AdminNav({ user, userRole, dictionary }: AdminNavProps) {
 								{isProfileOpen && (
 									<>
 										{/* Full-screen backdrop with explicit dimensions to bypass containing blocks */}
-										<div 
-											className="fixed left-0! top-0! w-screen! h-screen! z-100 bg-black/0 cursor-default" 
+										<div
+											className='fixed left-0! top-0! w-screen! h-screen! z-100 bg-black/0 cursor-default'
 											onClick={(e) => {
 												e.stopPropagation();
 												setIsProfileOpen(false);
@@ -143,7 +142,7 @@ export function AdminNav({ user, userRole, dictionary }: AdminNavProps) {
 													</span>
 													{dictionary.auth.my_profile}
 												</Link>
-												
+
 												{/* Link back to site if in admin */}
 												<Link
 													href='/'
@@ -165,7 +164,9 @@ export function AdminNav({ user, userRole, dictionary }: AdminNavProps) {
 														setIsProfileOpen(false);
 													}}
 												>
-													<span className='material-icons text-xl text-red-400 group-hover:text-red-500 transition-colors'>logout</span>
+													<span className='material-icons text-xl text-red-400 group-hover:text-red-500 transition-colors'>
+														logout
+													</span>
 													{dictionary.auth.signout}
 												</button>
 											</div>

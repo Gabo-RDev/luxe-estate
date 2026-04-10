@@ -8,5 +8,7 @@ export interface PropertiesPageProps {
 		beds?: string;
 		baths?: string;
 		location?: string;
+		saved?: string;
+		listingType?: string;
 	}>;
 }
