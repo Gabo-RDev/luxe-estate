@@ -43,6 +43,10 @@ function rowToProperty(row: PropertyRow): Property {
 		isFeatured: row.is_featured,
 		lat: row.lat ?? undefined,
 		lng: row.lng ?? undefined,
+		description: row.description ?? undefined,
+		yearBuilt: row.year_built ?? undefined,
+		parkingSpaces: row.parking_spaces ?? undefined,
+		amenities: row.amenities ?? undefined,
 	};
 }
 
@@ -137,6 +141,24 @@ export const getPropertyBySlug = cache(async (slug: string): Promise<Property | 
 
 	if (error) {
 		console.error(`[getPropertyBySlug] Error fetching property for slug "${slug}":`, error.message);
+		return null;
+	}
+
+	return data ? rowToProperty(data) : null;
+});
+
+/** Fetch a single property by its ID. */
+export const getPropertyById = cache(async (id: string): Promise<Property | null> => {
+	const supabase = await createClient();
+
+	const { data, error } = await supabase
+		.from('properties')
+		.select('*, property_images(url, order)')
+		.eq('id', id)
+		.maybeSingle();
+
+	if (error) {
+		console.error(`[getPropertyById] Error fetching property for id "${id}":`, error.message);
 		return null;
 	}
 
