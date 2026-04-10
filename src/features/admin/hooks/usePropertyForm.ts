@@ -66,16 +66,16 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 			if (images.length > 0) {
 				setUploadStatus(`Uploading ${images.length} image(s)...`);
 
-				for (const file of images) {
-					const url = await uploadPropertyImage(file);
-					if (url) {
-						uploadedImageUrls.push(url);
-					} else {
-						setUploadStatus('❌ Error uploading one or more images. Check bucket permissions.');
-						setIsSubmitting(false);
-						return;
-					}
+				const results = await Promise.all(images.map(uploadPropertyImage));
+				
+				if (results.some(url => !url)) {
+					setUploadStatus('❌ Error uploading one or more images. Check bucket permissions.');
+					setIsSubmitting(false);
+					return;
 				}
+				
+				uploadedImageUrls.push(...(results as string[]));
+
 
 				mainImageUrl = uploadedImageUrls[0];
 
