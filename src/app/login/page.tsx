@@ -25,7 +25,7 @@ export default async function LoginPage() {
 			<LoginAnimationWrapper>
 				<div className='text-center mb-10'>
 					<div className='inline-flex items-center justify-center w-14 h-14 bg-mosque rounded-xl mb-6 shadow-sm text-white'>
-						<span className='material-symbols-rounded text-3xl'>
+						<span className='material-icons text-3xl'>
 							real_estate_agent
 						</span>
 					</div>

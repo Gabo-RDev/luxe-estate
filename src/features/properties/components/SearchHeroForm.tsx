@@ -4,18 +4,15 @@ import dynamic from 'next/dynamic';
 import { useSearchFilters } from '@/hooks/useSearchFilters';
 import { SearchIcon } from '@/components/ui/icons/SearchIcon';
 import { FilterIcon } from '@/components/ui/icons/FilterIcon';
-import type { Dictionary } from '@/types/I18n';
+import { useI18n } from '@/lib/i18n/i18n-context';
 
 // Dynamic import for FiltersModal (Rule: bundle-dynamic-imports)
 const FiltersModal = dynamic(() => import('@/features/properties/components/FiltersModal'), {
 	ssr: false,
 });
 
-interface SearchHeroFormProps {
-	dictionary: Dictionary;
-}
-
-export function SearchHeroForm({ dictionary }: SearchHeroFormProps) {
+export function SearchHeroForm() {
+	const { dictionary } = useI18n();
 	const {
 		selectedCategory,
 		searchQuery,

@@ -40,7 +40,7 @@ export default async function SearchHero() {
 						</div>
 					}
 				>
-					<SearchHeroForm dictionary={dictionary} />
+					<SearchHeroForm />
 				</Suspense>
 			</div>
 		</section>
