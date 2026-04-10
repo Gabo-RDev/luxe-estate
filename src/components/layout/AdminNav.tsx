@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigation } from '@/hooks/useNavigation';
 import { LanguageSelector } from '../ui/LanguageSelector';
+import { NotificationsDropdown } from './NotificationsDropdown';
 import type { User } from '@supabase/supabase-js';
 import type { Dictionary } from '@/types/I18n';
 
@@ -65,9 +66,7 @@ export function AdminNav({ user, userRole, dictionary }: AdminNavProps) {
 
 					{/* Secondary Nav / Profile */}
 					<div className='flex items-center gap-4'>
-						<button className='p-2 rounded-full text-nordic/40 hover:text-mosque hover:bg-mosque/5 transition-colors cursor-pointer'>
-							<span className='material-icons text-xl'>notifications_none</span>
-						</button>
+					<NotificationsDropdown variant='admin' />
 
 						<div className='hidden sm:block'>
 							<LanguageSelector />

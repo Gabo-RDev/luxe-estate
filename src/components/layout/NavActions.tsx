@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigation } from '@/hooks/useNavigation';
 import { LanguageSelector } from '../ui/LanguageSelector';
+import { NotificationsDropdown } from './NotificationsDropdown';
 import type { User } from '@supabase/supabase-js';
 import type { Dictionary } from '@/types/I18n';
 
@@ -27,10 +28,7 @@ export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 				<span className='material-icons'>search</span>
 			</button>
 
-			<button className='hidden md:flex w-10 h-10 items-center justify-center text-nordic hover:text-mosque hover:bg-nordic/5 rounded-full transition-colors relative cursor-pointer'>
-				<span className='material-icons'>notifications_none</span>
-				<span className='absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-clear-day'></span>
-			</button>
+			<NotificationsDropdown variant='public' />
 
 			<div className='hidden md:block h-6 w-px bg-nordic/10 mx-1 md:mx-3'></div>
 

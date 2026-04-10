@@ -47,7 +47,7 @@ export default function PropertyCard({
 							</div>
 						) : null}
 					</div>
-					<FavoriteButton />
+					<FavoriteButton propertyId={property.id} />
 					<CardOverlayShadow />
 				</div>
 				<div className='p-6 relative'>
@@ -104,7 +104,7 @@ export default function PropertyCard({
 						</div>
 					) : null}
 				</div>
-				<FavoriteButton />
+				<FavoriteButton propertyId={property.id} />
 				<div
 					className={`absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded ${property.listingType === 'Rent' ? 'bg-mosque/90' : 'bg-nordic/90'}`}
 				>

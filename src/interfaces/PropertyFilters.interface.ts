@@ -6,4 +6,6 @@ export interface PropertyFilters {
 	beds?: number;
 	baths?: number;
 	location?: string;
+	listingType?: string;
+	savedIds?: string[];
 }

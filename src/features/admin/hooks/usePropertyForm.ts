@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { uploadPropertyImage } from '@/api/storage.api';
@@ -14,13 +14,27 @@ interface UsePropertyFormOptions {
 export function usePropertyForm({ initialData, isEdit = false }: UsePropertyFormOptions) {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isSavingDraft, setIsSavingDraft] = useState(false);
 	const [uploadStatus, setUploadStatus] = useState<string | null>(null);
 	const [images, setImages] = useState<File[]>([]);
 	const [previewUrls, setPreviewUrls] = useState<string[]>(
 		initialData?.imageUrl ? [initialData.imageUrl] : [],
 	);
+	const [mapCoordinates, setMapCoordinates] = useState({
+		lat: initialData?.lat ?? null,
+		lng: initialData?.lng ?? null,
+	});
+	const formRef = useRef<HTMLFormElement>(null);
 
 	const supabase = createClient();
+
+	const handleCoordinateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setMapCoordinates((prev) => ({
+			...prev,
+			[name]: value === '' ? null : Number(value),
+		}));
+	};
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
@@ -82,6 +96,9 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 				.replace(/[^a-z0-9]+/g, '-')
 				.replace(/(^-|-$)/g, '');
 
+			const latRaw = formData.get('lat') as string;
+			const lngRaw = formData.get('lng') as string;
+
 			const payload = {
 				title: formData.get('title') as string,
 				price: Number(formData.get('price')),
@@ -97,6 +114,8 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 				amenities: amenityValues.length > 0 ? amenityValues : null,
 				image_url: mainImageUrl,
 				slug: isEdit ? initialData!.slug : `${slug}-${Date.now()}`,
+				lat: latRaw ? Number(latRaw) : null,
+				lng: lngRaw ? Number(lngRaw) : null,
 			};
 
 			// 3. Insert or update property in Supabase
@@ -153,12 +172,76 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 		}
 	};
 
+	const handleSaveDraft = async () => {
+		if (!formRef.current) return;
+		setIsSavingDraft(true);
+		setUploadStatus(null);
+
+		const formData = new FormData(formRef.current);
+		const amenityValues = formData.getAll('amenities') as string[];
+		const titleRaw = (formData.get('title') as string) || 'untitled-draft';
+		const slug = titleRaw
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/(^-|-$)/g, '');
+		const latRaw = formData.get('lat') as string;
+		const lngRaw = formData.get('lng') as string;
+
+		const draftPayload = {
+			title: titleRaw,
+			price: Number(formData.get('price')) || 0,
+			listing_type: (formData.get('listing_type') as string) || 'for-sale',
+			property_type: (formData.get('property_type') as string) || 'apartment',
+			location: (formData.get('location') as string) || '',
+			description: (formData.get('description') as string) || null,
+			area: Number(formData.get('area')) || 0,
+			beds: Number(formData.get('beds')) || 0,
+			baths: Number(formData.get('baths')) || 0,
+			parking_spaces: Number(formData.get('parking_spaces')) || 0,
+			year_built: Number(formData.get('year_built')) || null,
+			amenities: amenityValues.length > 0 ? amenityValues : null,
+			image_url: initialData?.imageUrl ?? '',
+			is_featured: false,
+			badge: 'Draft',
+			slug: isEdit ? initialData!.slug : `draft-${slug}-${Date.now()}`,
+			lat: latRaw ? Number(latRaw) : null,
+			lng: lngRaw ? Number(lngRaw) : null,
+		};
+
+		try {
+			if (isEdit && initialData) {
+				const { error } = await supabase
+					.from('properties')
+					.update(draftPayload)
+					.eq('id', initialData.id);
+				if (error) throw error;
+			} else {
+				const { error } = await supabase
+					.from('properties')
+					.insert(draftPayload);
+				if (error) throw error;
+			}
+			setUploadStatus('✅ Draft saved successfully!');
+			setTimeout(() => setUploadStatus(null), 3000);
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : 'Unknown error';
+			setUploadStatus(`❌ Error saving draft: ${message}`);
+		} finally {
+			setIsSavingDraft(false);
+		}
+	};
+
 	return {
 		isSubmitting,
+		isSavingDraft,
 		uploadStatus,
 		previewUrls,
+		mapCoordinates,
+		formRef,
 		handleImageChange,
+		handleCoordinateChange,
 		removeImage,
 		handleSubmit,
+		handleSaveDraft,
 	};
 }

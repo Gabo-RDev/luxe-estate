@@ -1,8 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Property } from '@/interfaces/Property.interface';
 import { usePropertyForm } from '@/features/admin/hooks/usePropertyForm';
+
+const PropertyMap = dynamic(
+	() => import('@/features/properties/components/PropertyMap'),
+	{ ssr: false },
+);
 
 interface PropertyFormProps {
 	initialData?: Property;
@@ -15,18 +21,23 @@ export function PropertyForm({
 }: PropertyFormProps) {
 	const {
 		isSubmitting,
+		isSavingDraft,
 		uploadStatus,
 		previewUrls,
+		mapCoordinates,
+		formRef,
 		handleImageChange,
+		handleCoordinateChange,
 		removeImage,
 		handleSubmit,
+		handleSaveDraft,
 	} = usePropertyForm({ initialData, isEdit });
 
 	return (
 		<div className='bg-clear-day text-nordic min-h-screen font-sans'>
-			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10'>
-				<header className='mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gray-200 pb-8'>
-					<div className='space-y-4'>
+			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-10'>
+				<header className='sticky top-16 z-40 bg-clear-day/95 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-200 pb-4 pt-4 md:pb-6 md:pt-6 mb-8 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
+					<div className='space-y-2 md:space-y-4'>
 						<nav
 							aria-label='Breadcrumb'
 							className='flex'
@@ -67,19 +78,32 @@ export function PropertyForm({
 					<div className='flex gap-3'>
 						<button
 							type='button'
-							className='px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-nordic hover:bg-gray-50 transition-colors font-medium font-sf-pro text-sm cursor-pointer'
+							onClick={handleSaveDraft}
+							disabled={isSavingDraft || isSubmitting}
+							className='px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-nordic hover:bg-gray-50 transition-colors font-medium font-sf-pro text-sm cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center min-w-30'
 						>
-							Save Draft
+							{isSavingDraft ? (
+								<>
+									<span className='material-icons text-sm mr-2'>
+										hourglass_empty
+									</span>
+									Saving...
+								</>
+							) : (
+								'Save Draft'
+							)}
 						</button>
-					<button
-						type='submit'
-						form='property-form'
-						disabled={isSubmitting}
-						className='px-5 py-2.5 rounded-lg bg-mosque hover:bg-nordic disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-sf-pro text-sm cursor-pointer'
-					>
-						<span className='material-icons text-sm'>{isSubmitting ? 'hourglass_empty' : 'save'}</span>
-						{isSubmitting ? 'Saving...' : 'Save Property'}
-					</button>
+						<button
+							type='submit'
+							form='property-form'
+							disabled={isSubmitting}
+							className='px-5 py-2.5 rounded-lg bg-mosque hover:bg-nordic disabled:opacity-60 disabled:cursor-not-allowed text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-sf-pro text-sm cursor-pointer'
+						>
+							<span className='material-icons text-sm'>
+								{isSubmitting ? 'hourglass_empty' : 'save'}
+							</span>
+							{isSubmitting ? 'Saving...' : 'Save Property'}
+						</button>
 					</div>
 				</header>
 
@@ -98,6 +122,7 @@ export function PropertyForm({
 				)}
 
 				<form
+					ref={formRef}
 					id='property-form'
 					onSubmit={handleSubmit}
 					className='grid grid-cols-1 xl:grid-cols-12 gap-8 items-start'
@@ -342,20 +367,50 @@ export function PropertyForm({
 										type='text'
 									/>
 								</div>
-								<div className='relative h-48 w-full rounded-lg overflow-hidden bg-gray-100 border border-gray-200 group'>
-									<img
-										alt='Map view of city streets'
-										className='w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500'
-										src='https://lh3.googleusercontent.com/aida-public/AB6AXuAS55FY7gfArnlTpNsdabJk9nBO5uQJgOwIsl8beO34JRZ9dMmjLoIkTuTUO72Y9L5tUmQqTReQWebUWadAWwLusGmRQiIict5sqY--yRaOxuYpTzfR4vv4RKh1ex6oxY64e0kbSeMudNO6pv-gG0WzVWs-pDfvQm5IoTQ1mT-tAV49LDkXAHZl317M1-D7eZw3N8o2ExKWTgg6oMAXOFVnkApIqnb7TZHekwSw8pWQxpJV2EKI8EQKQbQXJaSbjN8gB1n8b-ueWj8'
-									/>
-									<div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
-										<span className='bg-white/90 text-nordic px-3 py-1.5 rounded shadow-sm backdrop-blur-sm text-xs font-bold font-sf-pro flex items-center gap-1'>
-											<span className='material-icons text-sm text-mosque'>
-												map
-											</span>{' '}
-											Preview
-										</span>
+								<div className='grid grid-cols-2 gap-3'>
+									<div>
+										<label
+											className='block text-sm font-medium text-nordic mb-1.5 font-sf-pro'
+											htmlFor='lat'
+										>
+											Latitude
+										</label>
+										<input
+											className='w-full px-4 py-2.5 rounded-md border-gray-200 bg-white text-nordic placeholder-gray-400 focus:ring-1 focus:ring-mosque focus:border-mosque transition-all text-sm font-sf-pro'
+											id='lat'
+											name='lat'
+											value={mapCoordinates.lat ?? ''}
+											onChange={handleCoordinateChange}
+											placeholder='e.g. 40.7128'
+											type='number'
+											step='any'
+										/>
 									</div>
+									<div>
+										<label
+											className='block text-sm font-medium text-nordic mb-1.5 font-sf-pro'
+											htmlFor='lng'
+										>
+											Longitude
+										</label>
+										<input
+											className='w-full px-4 py-2.5 rounded-md border-gray-200 bg-white text-nordic placeholder-gray-400 focus:ring-1 focus:ring-mosque focus:border-mosque transition-all text-sm font-sf-pro'
+											id='lng'
+											name='lng'
+											value={mapCoordinates.lng ?? ''}
+											onChange={handleCoordinateChange}
+											placeholder='e.g. -74.0060'
+											type='number'
+											step='any'
+										/>
+									</div>
+								</div>
+								<div className='relative overflow-hidden rounded-lg group z-0'>
+									<PropertyMap
+										location={initialData?.location || 'New York'}
+										lat={mapCoordinates.lat ?? undefined}
+										lng={mapCoordinates.lng ?? undefined}
+									/>
 								</div>
 							</div>
 						</div>

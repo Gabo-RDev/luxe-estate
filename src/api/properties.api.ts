@@ -94,7 +94,7 @@ export const getProperties = cache(async (
 		.eq('is_featured', false);
 
 	if (filters) {
-		const { query: q, location: loc, propertyType: type, minPrice, maxPrice, beds, baths } = filters;
+		const { query: q, location: loc, propertyType: type, minPrice, maxPrice, beds, baths, listingType, savedIds } = filters;
 
 		if (q) query = query.or(`title.ilike.%${q}%,location.ilike.%${q}%`);
 		if (loc) query = query.ilike('location', `%${loc}%`);
@@ -107,6 +107,17 @@ export const getProperties = cache(async (
 		if (maxPrice !== undefined) query = query.lte('price', maxPrice);
 		if (beds && beds > 0) query = query.gte('beds', beds);
 		if (baths && baths > 0) query = query.gte('baths', baths);
+
+		if (listingType) query = query.eq('listing_type', listingType);
+		
+		if (savedIds) {
+			if (savedIds.length > 0) {
+				query = query.in('id', savedIds);
+			} else {
+				// If filtering by favorites but array is empty, force empty result
+				query = query.in('id', ['00000000-0000-0000-0000-000000000000']);
+			}
+		}
 	}
 
 	const { data, error, count } = await query
