@@ -1,6 +1,7 @@
 'use client';
 
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -16,16 +17,26 @@ const customIcon = L.divIcon({
 	iconAnchor: [16, 32],
 });
 
+function MapUpdater({ center, zoom }: { center: [number, number]; zoom: number }) {
+	const map = useMap();
+	useEffect(() => {
+		map.setView(center, zoom);
+	}, [center, zoom, map]);
+	return null;
+}
+
 export default function PropertyMap({ location, lat, lng }: PropertyMapProps) {
 	// Use real coordinates if provided, otherwise fall back to generic US center
-	const hasCoords = lat !== undefined && lng !== undefined;
-	const position: [number, number] = hasCoords ? [lat!, lng!] : [39.5, -98.35];
+	const hasCoords = lat !== undefined && lat !== null && lng !== undefined && lng !== null && !isNaN(lat) && !isNaN(lng);
+	const position: [number, number] = hasCoords ? [lat, lng] : [39.5, -98.35];
+	const zoomLevel = hasCoords ? 13 : 4;
+	const mapQuery = hasCoords ? `${lat},${lng}` : location;
 
 	return (
 		<div className='relative w-full aspect-4/3 rounded-lg overflow-hidden bg-slate-100 z-0'>
 			<MapContainer
 				center={position}
-				zoom={hasCoords ? 13 : 4}
+				zoom={zoomLevel}
 				scrollWheelZoom={false}
 				style={{ height: '100%', width: '100%', zIndex: 0 }}
 			>
@@ -33,6 +44,7 @@ export default function PropertyMap({ location, lat, lng }: PropertyMapProps) {
 					url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 				/>
+				<MapUpdater center={position} zoom={zoomLevel} />
 				{hasCoords ? (
 					<Marker
 						position={position}
@@ -41,7 +53,7 @@ export default function PropertyMap({ location, lat, lng }: PropertyMapProps) {
 				) : null}
 			</MapContainer>
 			<a
-				href={`https://maps.google.com/?q=${encodeURIComponent(location)}`}
+				href={`https://maps.google.com/?q=${encodeURIComponent(mapQuery)}`}
 				target='_blank'
 				rel='noopener noreferrer'
 				className='absolute bottom-2 right-2 bg-white/90 text-xs font-medium px-2 py-1 rounded shadow-sm text-nordic hover:text-mosque z-1000'

@@ -66,7 +66,19 @@ export default async function PropertiesPage({
 	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
 	const dictionary = await getDictionary(locale);
 
-	const filters = {
+	let savedIds: string[] = [];
+	if (params.saved === 'true') {
+		try {
+			const favCookie = cookieStore.get('favorites')?.value;
+			if (favCookie) {
+				savedIds = JSON.parse(decodeURIComponent(favCookie));
+			}
+		} catch (e) {
+			console.error('Failed to parse favorites cookie', e);
+		}
+	}
+
+	const filters: PropertyFilters = {
 		query: params.query,
 		propertyType: params.type?.toLowerCase(),
 		minPrice: params.minPrice ? parseInt(params.minPrice, 10) : undefined,
@@ -74,6 +86,8 @@ export default async function PropertiesPage({
 		beds: params.beds ? parseInt(params.beds, 10) : undefined,
 		baths: params.baths ? parseInt(params.baths, 10) : undefined,
 		location: params.location,
+		listingType: params.listingType,
+		...(params.saved === 'true' && { savedIds }),
 	};
 
 	const suspenseKey = JSON.stringify({ currentPage, filters });

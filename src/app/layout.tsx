@@ -31,15 +31,18 @@ export default async function RootLayout({
 	const locale = locales.includes(localeCookie) ? localeCookie : defaultLocale;
 
 	const [
-		{ data: { user } },
+		{
+			data: { user },
+		},
 		dictionary,
-		{ data: roleData }
+		{ data: roleData },
 	] = await Promise.all([
 		supabase.auth.getUser(),
 		getDictionary(locale),
-		supabase.from('user_roles').select('role').maybeSingle()
+		supabase.from('user_roles').select('role').maybeSingle(),
 	]);
 
+	// Fetch role if user exists
 	const userRole = user ? roleData?.role : null;
 
 	return (
@@ -61,7 +64,10 @@ export default async function RootLayout({
 					locale={locale}
 					dictionary={dictionary}
 				>
-					<Navigation user={user} userRole={userRole} />
+					<Navigation
+						user={user}
+						userRole={userRole}
+					/>
 					{children}
 				</I18nProvider>
 			</body>

@@ -37,6 +37,10 @@ export type Database = {
           title: string
           title_es: string | null
           title_fr: string | null
+          description: string | null
+          year_built: number | null
+          parking_spaces: number | null
+          amenities: string[] | null
         }
         Insert: {
           area: number
@@ -60,6 +64,10 @@ export type Database = {
           title: string
           title_es?: string | null
           title_fr?: string | null
+          description?: string | null
+          year_built?: number | null
+          parking_spaces?: number | null
+          amenities?: string[] | null
         }
         Update: {
           area?: number
@@ -83,6 +91,10 @@ export type Database = {
           title?: string
           title_es?: string | null
           title_fr?: string | null
+          description?: string | null
+          year_built?: number | null
+          parking_spaces?: number | null
+          amenities?: string[] | null
         }
         Relationships: []
       }
