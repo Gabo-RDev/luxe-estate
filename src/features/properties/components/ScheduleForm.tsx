@@ -1,7 +1,8 @@
 'use client';
 
 import { ScheduleFormProps } from '@/interfaces/ScheduleFormProps.interface';
-import { TIME_SLOTS, DAY_NAMES } from '@/lib/constants';
+import { TIME_SLOTS } from '@/lib/constants';
+import { Calendar } from '@/components/ui/calendar';
 import { useScheduleForm } from '../hooks/useScheduleForm';
 
 export default function ScheduleForm({
@@ -10,11 +11,8 @@ export default function ScheduleForm({
 	propertyTitle,
 }: ScheduleFormProps) {
 	const {
-		today,
-		currentYear,
-		currentMonth,
-		selectedDay,
-		setSelectedDay,
+		selectedDate,
+		setSelectedDate,
 		selectedTime,
 		setSelectedTime,
 		message,
@@ -22,12 +20,6 @@ export default function ScheduleForm({
 		isSubmitting,
 		submitResult,
 		errorMessage,
-		daysInMonth,
-		firstDayIndex,
-		monthName,
-		goToPrevMonth,
-		goToNextMonth,
-		isDayDisabled,
 		handleConfirm,
 		router,
 	} = useScheduleForm(propertySlug, propertyId, propertyTitle);
@@ -38,9 +30,11 @@ export default function ScheduleForm({
 				<div className='w-20 h-20 rounded-full bg-hintgreen flex items-center justify-center mb-6'>
 					<span className='material-icons text-mosque text-4xl'>check</span>
 				</div>
-				<h2 className='text-2xl font-bold text-nordic mb-2'>Visit Confirmed!</h2>
+				<h2 className='text-2xl font-bold text-nordic mb-2'>
+					Visit Confirmed!
+				</h2>
 				<p className='text-slate-500 mb-2'>
-					{new Date(currentYear, currentMonth, selectedDay!).toLocaleDateString('en-US', {
+					{selectedDate?.toLocaleDateString('en-US', {
 						weekday: 'long',
 						month: 'long',
 						day: 'numeric',
@@ -49,86 +43,36 @@ export default function ScheduleForm({
 					{' at '}
 					{selectedTime}
 				</p>
-				<p className='text-sm text-slate-400'>Redirecting to property details…</p>
+				<p className='text-sm text-slate-400'>
+					Redirecting to property details…
+				</p>
 			</div>
 		);
 	}
 
 	return (
 		<div>
-			<h1 className='text-3xl font-bold text-nordic mb-2'>Schedule a Viewing</h1>
+			<h1 className='text-3xl font-bold text-nordic mb-2'>
+				Schedule a Viewing
+			</h1>
 			<p className='text-slate-500 mb-8'>
 				Choose a date and time to tour the property in person.
 			</p>
 
 			{/* Calendar */}
-			<div className='mb-8'>
-				<div className='flex items-center justify-between mb-4'>
-					<h3 className='text-sm font-semibold text-nordic uppercase tracking-wider'>
-						{monthName}
-					</h3>
-					<div className='flex gap-1'>
-						<button
-							onClick={goToPrevMonth}
-							className='p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-mosque transition-colors'
-						>
-							<span className='material-icons text-lg'>chevron_left</span>
-						</button>
-						<button
-							onClick={goToNextMonth}
-							className='p-1 rounded-full hover:bg-slate-100 text-nordic hover:text-mosque transition-colors'
-						>
-							<span className='material-icons text-lg'>chevron_right</span>
-						</button>
-					</div>
-				</div>
-
-				<div className='grid grid-cols-7 gap-y-2 gap-x-1 text-center mb-6'>
-					{DAY_NAMES.map((d) => (
-						<div key={d} className='text-xs font-medium text-slate-400 py-2'>
-							{d}
-						</div>
-					))}
-
-					{/* Empty cells for the offset */}
-					{Array.from({ length: firstDayIndex }).map((_, i) => (
-						<div key={`empty-${i}`} />
-					))}
-
-					{/* Actual day buttons */}
-					{Array.from({ length: daysInMonth }).map((_, i) => {
-						const day = i + 1;
-						const disabled = isDayDisabled(day);
-						const isSelected = selectedDay === day;
-						const isToday =
-							day === today.getDate() &&
-							currentMonth === today.getMonth() &&
-							currentYear === today.getFullYear();
-
-						return (
-							<button
-								key={day}
-								disabled={disabled}
-								onClick={() => setSelectedDay(day)}
-								className={`text-sm py-2 rounded-lg transition-all relative ${
-									disabled
-										? 'text-slate-300 cursor-not-allowed'
-										: isSelected
-										? 'bg-mosque text-white font-semibold shadow-lg shadow-mosque/30 transform scale-105'
-										: 'text-slate-600 hover:bg-slate-100 transition-colors'
-								}`}
-							>
-								{day}
-								{isSelected && (
-									<span className='absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full' />
-								)}
-								{isToday && !isSelected && (
-									<span className='absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-mosque rounded-full' />
-								)}
-							</button>
-						);
-					})}
-				</div>
+			<div className='mb-8 flex justify-center sm:justify-start'>
+				<Calendar
+					mode='single'
+					selected={selectedDate}
+					onSelect={setSelectedDate}
+					disabled={(date) => {
+						const today = new Date();
+						today.setHours(0, 0, 0, 0);
+						// Disable past dates and Sundays
+						return date < today || date.getDay() === 0;
+					}}
+					className='rounded-md border p-3'
+				/>
 			</div>
 
 			{/* Time Slots */}
@@ -195,16 +139,18 @@ export default function ScheduleForm({
 				</button>
 				<button
 					onClick={handleConfirm}
-					disabled={!selectedDay || !selectedTime || isSubmitting}
+					disabled={!selectedDate || !selectedTime || isSubmitting}
 					className={`font-semibold py-3 px-8 rounded-lg shadow-lg transition-all text-sm flex items-center gap-2 ${
-						!selectedDay || !selectedTime
+						!selectedDate || !selectedTime
 							? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
 							: 'bg-mosque hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 text-white shadow-mosque/20'
 					}`}
 				>
 					{isSubmitting ? (
 						<>
-							<span className='material-icons text-sm animate-spin'>autorenew</span>
+							<span className='material-icons text-sm animate-spin'>
+								autorenew
+							</span>
 							<span>Confirming…</span>
 						</>
 					) : (
