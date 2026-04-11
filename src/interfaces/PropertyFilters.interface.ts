@@ -8,4 +8,5 @@ export interface PropertyFilters {
 	location?: string;
 	listingType?: string;
 	savedIds?: string[];
+	sort?: string;
 }

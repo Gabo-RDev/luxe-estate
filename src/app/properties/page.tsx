@@ -3,6 +3,7 @@ import { TablePagination } from '@/components/ui/TablePagination';
 import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import PropertyGridSkeleton from '@/features/properties/components/PropertyGridSkeleton';
 import SearchHero from '@/features/properties/components/SearchHero';
+import FavoritesControls from '@/features/properties/components/FavoritesControls';
 import { getProperties } from '@/api/properties.api';
 import { PAGE_SIZE } from '@/lib/constants';
 import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
@@ -17,13 +18,16 @@ import { PropertiesPageProps } from '@/interfaces/PropertiesPageProps.interface'
 async function PropertiesGrid({
 	currentPage,
 	filters,
+	isFavoriteMode,
 	dictionary,
 	locale,
 }: {
 	currentPage: number;
 	filters: PropertyFilters;
+	isFavoriteMode: boolean;
 	dictionary: Dictionary;
 	locale: Locale;
+	viewMode?: string;
 }) {
 
 	const { data: properties, totalPages, totalCount } = await getProperties(
@@ -34,11 +38,38 @@ async function PropertiesGrid({
 
 	return (
 		<>
+			{isFavoriteMode ? (
+				<div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4 mt-8">
+					<div>
+						<h1 className="text-3xl md:text-4xl font-bold text-nordic tracking-tight mb-2">
+							{dictionary.favorites_page?.title || "Your Favorites"}
+						</h1>
+						<p className="text-nordic/70">
+							{dictionary.favorites_page?.description?.replace('{count}', totalCount.toString()) || 
+							`You have ${totalCount} saved properties waiting for you.`}
+						</p>
+					</div>
+					<div className="flex items-center space-x-3">
+						<FavoritesControls dictionary={dictionary} />
+					</div>
+				</div>
+			) : (
+				<div className='mb-8'>
+					<h1 className='text-3xl font-light text-nordic'>
+						{dictionary.properties_page.title}
+					</h1>
+					<p className='text-nordic/70 mt-2 text-sm max-w-2xl'>
+						{dictionary.properties_page.description}
+					</p>
+				</div>
+			)}
 			<PropertyGrid
 				properties={properties}
 				currentPage={currentPage}
+				isFavoriteMode={isFavoriteMode}
 				dictionary={dictionary}
 				locale={locale}
+				viewMode={viewMode}
 			/>
 
 			<Suspense fallback={null}>
@@ -87,23 +118,18 @@ export default async function PropertiesPage({
 		baths: params.baths ? parseInt(params.baths, 10) : undefined,
 		location: params.location,
 		listingType: params.listingType,
+		sort: params.sort,
 		...(params.saved === 'true' && { savedIds }),
 	};
 
 	const suspenseKey = JSON.stringify({ currentPage, filters });
 
+	const isFavoriteMode = params.saved === 'true';
+
 	return (
 		<div className='min-h-screen'>
 			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-				<SearchHero />
-				<div className='mb-8'>
-					<h1 className='text-3xl font-light text-nordic'>
-						{dictionary.properties_page.title}
-					</h1>
-					<p className='text-nordic/70 mt-2 text-sm max-w-2xl'>
-						{dictionary.properties_page.description}
-					</p>
-				</div>
+				{!isFavoriteMode && <SearchHero />}
 
 				<Suspense
 					key={suspenseKey}
@@ -112,8 +138,10 @@ export default async function PropertiesPage({
 					<PropertiesGrid
 						currentPage={currentPage}
 						filters={filters}
+						isFavoriteMode={isFavoriteMode}
 						dictionary={dictionary}
 						locale={locale}
+						viewMode={params.view}
 					/>
 
 				</Suspense>

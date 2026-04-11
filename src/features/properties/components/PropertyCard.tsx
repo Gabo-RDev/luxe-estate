@@ -16,8 +16,10 @@ const CardOverlayShadow = () => (
 export default function PropertyCard({
 	property,
 	featuredMode = false,
+	isFavoriteMode = false,
 	dictionary,
 	locale,
+	viewMode = 'grid',
 }: PropertyCardProps) {
 	const localizedTitle =
 		(property[`title_${locale}` as keyof Property] as string) || property.title;
@@ -84,6 +86,89 @@ export default function PropertyCard({
 						<div className='flex items-center gap-2 text-nordic/80 text-sm'>
 							<AreaIcon size={18} /> {property.area.toLocaleString('en-US')} m²
 						</div>
+					</div>
+				</div>
+			</Link>
+		);
+	}
+
+	if (isFavoriteMode) {
+		const isList = viewMode === 'list';
+		return (
+			<Link
+				href={`/properties/${property.slug}`}
+				className={`group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 flex ${isList ? 'flex-col sm:flex-row h-full sm:h-64' : 'flex-col h-full'}`}
+			>
+				<div className={`relative overflow-hidden ${isList ? 'h-64 sm:h-full sm:w-2/5 shrink-0' : 'h-64'}`}>
+					{property.imageUrl ? (
+						<Image
+							alt={property.title}
+							className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-700'
+							src={property.imageUrl}
+							fill
+							sizes={isList ? '(max-width: 640px) 100vw, 40vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
+						/>
+					) : (
+						<div className='absolute inset-0 flex flex-col items-center justify-center gap-2 text-gray-300 bg-gray-100'>
+							<span className='material-icons text-5xl'>home</span>
+							<span className='text-xs font-medium'>No image</span>
+						</div>
+					)}
+					<FavoriteButton propertyId={property.id} />
+					{property.isFeatured ? (
+						<div className="absolute bottom-3 left-3 bg-nordic/90 backdrop-blur-md px-3 py-1 rounded-md shadow-sm">
+							<span className="text-xs font-semibold text-white uppercase tracking-wider text-[10px]">{dictionary.property_card.exclusive}</span>
+						</div>
+					) : null}
+				</div>
+				<div className={`p-5 flex-1 flex flex-col ${isList ? 'justify-between sm:py-6 sm:px-8' : ''}`}>
+					<div>
+						<div className='flex justify-between items-start mb-2'>
+							<h3 className={`font-bold text-nordic ${isList ? 'text-xl' : 'text-lg'}`}>
+								${property.price.toLocaleString('en-US')}
+								{property.pricePeriod ? (
+									<span className='text-xs font-normal text-nordic/70 ml-1'>
+										{property.pricePeriod}
+									</span>
+								) : null}
+							</h3>
+							<span className={`text-[10px] font-medium px-2 py-1 rounded ${
+								property.listingType === 'Rent' 
+									? 'bg-blue-50 text-blue-800' 
+									: 'bg-hintgreen text-mosque'
+							}`}>
+								{dictionary.property_card.for}{' '}
+								{property.listingType === 'Rent'
+									? dictionary.property_card.rent
+									: dictionary.property_card.buy}
+							</span>
+						</div>
+						<h4 className={`text-nordic font-medium mb-1 ${isList ? 'text-lg' : 'line-clamp-1'}`}>
+							{localizedTitle}
+						</h4>
+						<p className={`text-nordic/70 text-sm mb-4 ${isList ? '' : 'line-clamp-1'}`}>{localizedLocation}</p>
+					</div>
+
+					<div className={`flex items-center justify-between text-nordic/60 text-xs font-medium ${isList ? 'mb-4 border-t border-b border-nordic/5 py-4' : 'mb-6'}`}>
+						<div className='flex items-center gap-1.5'>
+							<BedIcon size={16} className='text-mosque' />
+							<span>{property.beds} {dictionary.property_card.beds}</span>
+						</div>
+						<div className='flex items-center gap-1.5'>
+							<BathIcon size={16} className='text-mosque' />
+							<span>{property.baths} {dictionary.property_card.baths}</span>
+						</div>
+						<div className='flex items-center gap-1.5'>
+							<AreaIcon size={16} className='text-mosque' />
+							<span>{property.area} m²</span>
+						</div>
+					</div>
+
+					<div className={`mt-auto ${isList ? 'flex justify-end' : ''}`}>
+						<button className={`${isList ? 'px-8' : 'w-full'} py-2.5 rounded-lg border border-mosque text-mosque font-medium text-sm hover:bg-mosque hover:text-white transition-colors duration-300 flex items-center justify-center gap-2`}>
+							<span>{property.listingType === 'Rent' ? (dictionary.favorites_page?.schedule_tour || "Schedule Tour") : (dictionary.favorites_page?.book_visit || "Book Visit")}</span>
+							<span className='material-icons text-base'>{property.listingType === 'Rent' ? 'calendar_today' : 'arrow_forward'}</span>
+						</button>
 					</div>
 				</div>
 			</Link>
