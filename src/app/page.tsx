@@ -4,7 +4,7 @@ import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import SearchHero from '@/features/properties/components/SearchHero';
 import PropertyCard from '@/features/properties/components/PropertyCard';
 import PropertyGridSkeleton from '@/features/properties/components/PropertyGridSkeleton';
-// import Navigation from '@/components/layout/Navigation'; (already in layout)
+import ListingTypeFilter from '@/features/properties/components/ListingTypeFilter';
 import { getFeaturedProperties, getProperties } from '@/api/properties.api';
 import { PAGE_SIZE } from '@/lib/constants';
 import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
@@ -80,6 +80,7 @@ export default async function Home({ searchParams }: HomeProps) {
 		beds: params.beds ? parseInt(params.beds, 10) : undefined,
 		baths: params.baths ? parseInt(params.baths, 10) : undefined,
 		location: params.location,
+		listingType: params.listingType,
 	};
 
 	const hasActiveFilters = Boolean(
@@ -149,17 +150,7 @@ export default async function Home({ searchParams }: HomeProps) {
 								{dictionary.home.fresh_opportunities}
 							</p>
 						</div>
-						<div className='hidden md:flex bg-white p-1 rounded-lg shadow-sm border border-nordic/5'>
-							<button className='px-4 py-1.5 rounded-md text-sm font-medium bg-nordic text-white'>
-								{dictionary.home.all}
-							</button>
-							<button className='px-4 py-1.5 rounded-md text-sm font-medium text-nordic/70 hover:text-nordic'>
-								{dictionary.home.buy}
-							</button>
-							<button className='px-4 py-1.5 rounded-md text-sm font-medium text-nordic/70 hover:text-nordic'>
-								{dictionary.home.rent}
-							</button>
-						</div>
+					<ListingTypeFilter />
 					</div>
 
 					<Suspense

@@ -91,6 +91,7 @@
 		"show_homes": "Afficher les Maisons"
 	},
 	"property_details": {
+		"back_to_property": "Retour aux détails de la propriété",
 		"top_rated_agent": "Agent le Mieux Noté",
 		"schedule_visit": "Planifier une Visite",
 		"contact_agent": "Contacter l'Agent",

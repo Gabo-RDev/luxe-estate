@@ -91,6 +91,7 @@
 		"show_homes": "Show Homes"
 	},
 	"property_details": {
+		"back_to_property": "Back to property details",
 		"top_rated_agent": "Top Rated Agent",
 		"schedule_visit": "Schedule Visit",
 		"contact_agent": "Contact Agent",

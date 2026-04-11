@@ -12,7 +12,6 @@ import { getDictionary } from '@/lib/i18n/getDictionary';
 import { defaultLocale, locales } from '@/lib/i18n/config';
 import { Locale, Dictionary } from '@/types/I18n';
 
-
 import { PropertiesPageProps } from '@/interfaces/PropertiesPageProps.interface';
 
 async function PropertiesGrid({
@@ -21,6 +20,7 @@ async function PropertiesGrid({
 	isFavoriteMode,
 	dictionary,
 	locale,
+	viewMode,
 }: {
 	currentPage: number;
 	filters: PropertyFilters;
@@ -29,27 +29,28 @@ async function PropertiesGrid({
 	locale: Locale;
 	viewMode?: string;
 }) {
-
-	const { data: properties, totalPages, totalCount } = await getProperties(
-		currentPage,
-		PAGE_SIZE,
-		filters,
-	);
+	const {
+		data: properties,
+		totalPages,
+		totalCount,
+	} = await getProperties(currentPage, PAGE_SIZE, filters);
 
 	return (
 		<>
 			{isFavoriteMode ? (
-				<div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4 mt-8">
+				<div className='flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4 mt-8'>
 					<div>
-						<h1 className="text-3xl md:text-4xl font-bold text-nordic tracking-tight mb-2">
-							{dictionary.favorites_page?.title || "Your Favorites"}
+						<h1 className='text-3xl md:text-4xl font-bold text-nordic tracking-tight mb-2'>
+							{dictionary.favorites_page?.title || 'Your Favorites'}
 						</h1>
-						<p className="text-nordic/70">
-							{dictionary.favorites_page?.description?.replace('{count}', totalCount.toString()) || 
-							`You have ${totalCount} saved properties waiting for you.`}
+						<p className='text-nordic/70'>
+							{dictionary.favorites_page?.description?.replace(
+								'{count}',
+								totalCount.toString(),
+							) || `You have ${totalCount} saved properties waiting for you.`}
 						</p>
 					</div>
-					<div className="flex items-center space-x-3">
+					<div className='flex items-center space-x-3'>
 						<FavoritesControls dictionary={dictionary} />
 					</div>
 				</div>
@@ -78,7 +79,7 @@ async function PropertiesGrid({
 					totalPages={totalPages}
 					totalResults={totalCount}
 					pageSize={PAGE_SIZE}
-					className="mt-12 px-6 py-4 border border-nordic/5 rounded-xl shadow-sm flex items-center justify-between bg-white"
+					className='mt-12 px-6 py-4 border border-nordic/5 rounded-xl shadow-sm flex items-center justify-between bg-white'
 				/>
 			</Suspense>
 		</>
@@ -89,7 +90,7 @@ export default async function PropertiesPage({
 	searchParams,
 }: PropertiesPageProps) {
 	const [params, cookieStore] = await Promise.all([searchParams, cookies()]);
-	
+
 	const parsedPage = parseInt(params.page ?? '', 10);
 	const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
 
@@ -143,7 +144,6 @@ export default async function PropertiesPage({
 						locale={locale}
 						viewMode={params.view}
 					/>
-
 				</Suspense>
 			</main>
 		</div>
