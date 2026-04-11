@@ -1,9 +1,6 @@
 'use client';
 
-interface ProfileStatsProps {
-	savedCount: number;
-	visitsCount: number;
-}
+import { ProfileStatsProps } from '@/interfaces/ProfileStatsProps.interface';
 
 export default function ProfileStats({ savedCount, visitsCount }: ProfileStatsProps) {
 	return (

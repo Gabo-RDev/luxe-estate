@@ -16,46 +16,7 @@ import { Locale, Dictionary } from '@/types/I18n';
 
 import { HomeProps } from '@/interfaces/HomeProps.interface';
 
-// Extract the grid portion to a Server Component to wrap with Suspense
-async function NewInMarketGrid({
-	currentPage,
-	filters,
-	dictionary,
-	locale,
-}: {
-	currentPage: number;
-	filters: PropertyFilters;
-	dictionary: Dictionary;
-	locale: Locale;
-}) {
-
-	const { data: newProperties, totalPages } = await getProperties(
-		currentPage,
-		PAGE_SIZE,
-		filters,
-	);
-
-	return (
-		<>
-			{/* Client wrapper: handles fade animation + scroll-to-section on page change */}
-			<PropertyGrid
-				properties={newProperties}
-				currentPage={currentPage}
-				dictionary={dictionary}
-				locale={locale}
-			/>
-
-
-			{/* Pagination — scroll={false} on all Links to avoid jump-to-top */}
-			<Suspense fallback={null}>
-				<Pagination
-					currentPage={currentPage}
-					totalPages={totalPages}
-				/>
-			</Suspense>
-		</>
-	);
-}
+import { NewInMarketGrid } from '@/features/properties/components/NewInMarketGrid';
 
 export default async function Home({ searchParams }: HomeProps) {
 	const params = await searchParams;

@@ -1,35 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { ProfileTabsProps } from '@/interfaces/ProfileTabsProps.interface';
+import { PROFILE_TABS } from '@/lib/constants';
+import { useProfileTabs } from './hooks/useProfileTabs';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Property } from '@/interfaces/Property.interface';
-import { cancelVisit } from '@/app/properties/[slug]/schedule/actions';
-
-interface ScheduledVisit {
-	id: string;
-	property_id: string;
-	property_title: string;
-	visit_date: string;
-	visit_time: string;
-	message: string | null;
-	status: string;
-	created_at: string;
-}
-
-interface ProfileTabsProps {
-	savedProperties: Property[];
-	userEmail: string;
-	initialVisits: ScheduledVisit[];
-}
-
-const TABS = [
-	'Saved Properties',
-	'Scheduled Visits',
-	'Preferences & Settings',
-] as const;
-type TabName = (typeof TABS)[number];
 
 function formatVisitDate(dateStr: string) {
 	const d = new Date(dateStr + 'T00:00:00');
@@ -46,33 +21,21 @@ export default function ProfileTabs({
 	userEmail,
 	initialVisits,
 }: ProfileTabsProps) {
-	const router = useRouter();
-	const [activeTab, setActiveTab] = useState<TabName>('Saved Properties');
-	const [visits, setVisits] = useState<ScheduledVisit[]>(initialVisits);
-	const [cancellingId, setCancellingId] = useState<string | null>(null);
-	const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-
-	const handleCancelVisit = async (visitId: string) => {
-		setCancellingId(visitId);
-		try {
-			const result = await cancelVisit(visitId);
-			if (result.success) {
-				// Optimistic removal
-				setVisits((prev) => prev.filter((v) => v.id !== visitId));
-				router.refresh();
-			}
-		} catch (e) {
-			console.error('Failed to cancel visit', e);
-		} finally {
-			setCancellingId(null);
-		}
-	};
+	const {
+		activeTab,
+		setActiveTab,
+		visits,
+		cancellingId,
+		notificationsEnabled,
+		setNotificationsEnabled,
+		handleCancelVisit,
+	} = useProfileTabs(initialVisits);
 
 	return (
 		<>
 			{/* Tab Navigation */}
 			<div className='flex items-center gap-8 border-b border-nordic/10 mb-10 overflow-x-auto'>
-				{TABS.map((tab) => (
+				{PROFILE_TABS.map((tab) => (
 					<button
 						key={tab}
 						onClick={() => setActiveTab(tab)}

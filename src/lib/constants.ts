@@ -64,3 +64,35 @@ export const FILTER_KEYS = [
 export const SESSION_DURATION_SECONDS = 3600;
 /** Refresh token expiration (1 year for default projects) */
 export const REFRESH_TOKEN_DURATION_DAYS = 365;
+
+// ─── Schedule Form ────────────────────────────────────────────────────────
+export const TIME_SLOTS = [
+	'09:00 AM',
+	'09:30 AM',
+	'10:00 AM',
+	'10:30 AM',
+	'11:00 AM',
+	'11:30 AM',
+	'01:00 PM',
+	'02:00 PM',
+	'03:00 PM',
+	'03:30 PM',
+	'04:00 PM',
+];
+
+export const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+// ─── Profile Tabs ─────────────────────────────────────────────────────────
+export const PROFILE_TABS = [
+	'Saved Properties',
+	'Scheduled Visits',
+	'Preferences & Settings',
+] as const;
+
+// ─── Property Form ────────────────────────────────────────────────────────
+export const PROPERTY_FORM_AMENITIES = [
+	'Swimming Pool',
+	'Garden',
+	'Air Conditioning',
+	'Smart Home',
+] as const;

@@ -3,19 +3,14 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { uploadPropertyImage } from '@/api/storage.api';
-import { Property } from '@/interfaces/Property.interface';
+import { PropertyFormProps } from '@/interfaces/PropertyFormProps.interface';
 import {
 	createProperty,
 	updateProperty,
 	insertPropertyImages,
 } from '@/app/admin/properties/actions';
 
-interface UsePropertyFormOptions {
-	initialData?: Property;
-	isEdit?: boolean;
-}
-
-export function usePropertyForm({ initialData, isEdit = false }: UsePropertyFormOptions) {
+export function usePropertyForm({ initialData, isEdit = false }: PropertyFormProps) {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSavingDraft, setIsSavingDraft] = useState(false);

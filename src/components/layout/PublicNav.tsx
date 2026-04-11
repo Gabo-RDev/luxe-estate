@@ -2,18 +2,15 @@ import Link from 'next/link';
 import { Logo } from './Logo';
 import { NavActions } from './NavActions';
 import { MobileNav } from './MobileNav';
-import type { User } from '@supabase/supabase-js';
+import { NavActionsProps } from '@/interfaces/NavActionsProps.interface';
+
 import type { Dictionary } from '@/types/I18n';
 
 export function PublicNav({
 	user,
 	userRole,
 	dictionary,
-}: {
-	user: User | null;
-	userRole?: string | null;
-	dictionary: Dictionary;
-}) {
+}: NavActionsProps) {
 	const navLinks = [
 		{ label: dictionary.nav.buy, href: '/properties?listingType=Sale' },
 		{ label: dictionary.nav.rent, href: '/properties?listingType=Rent' },

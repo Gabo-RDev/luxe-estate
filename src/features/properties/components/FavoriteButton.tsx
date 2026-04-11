@@ -1,55 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { FavoriteButtonProps } from '@/interfaces/FavoriteButtonProps.interface';
 import { HeartIcon } from '@/components/ui/icons/HeartIcon';
-
-interface FavoriteButtonProps {
-	propertyId: string;
-}
-
-function getFavoritesFromCookie(): string[] {
-	if (typeof document === 'undefined') return [];
-	const match = document.cookie.match(new RegExp('(^| )favorites=([^;]+)'));
-	if (match) {
-		try {
-			return JSON.parse(decodeURIComponent(match[2]));
-		} catch (e) {
-			return [];
-		}
-	}
-	return [];
-}
+import { useFavoriteButton } from '../hooks/useFavoriteButton';
 
 export function FavoriteButton({ propertyId }: FavoriteButtonProps) {
-	const router = useRouter();
-	const [isFavorite, setIsFavorite] = useState(false);
+	const { isFavorite, toggleFavorite } = useFavoriteButton(propertyId);
 
-	useEffect(() => {
-		const favorites = getFavoritesFromCookie();
-		setIsFavorite(favorites.includes(propertyId));
-	}, [propertyId]);
-
-	const toggleFavorite = (e: React.MouseEvent) => {
-		e.preventDefault();
-		e.stopPropagation();
-		
-		const favorites = getFavoritesFromCookie();
-		let newFavorites;
-		
-		if (favorites.includes(propertyId)) {
-			newFavorites = favorites.filter((id) => id !== propertyId);
-			setIsFavorite(false);
-		} else {
-			newFavorites = [...favorites, propertyId];
-			setIsFavorite(true);
-		}
-		
-		document.cookie = `favorites=${encodeURIComponent(JSON.stringify(newFavorites))}; path=/; max-age=31536000`;
-		
-		// Refresh server state to reflect updated favorites in Saved Homes view
-		router.refresh();
-	};
 
 	return (
 		<button
