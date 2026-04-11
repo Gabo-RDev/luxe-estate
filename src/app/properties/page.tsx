@@ -3,6 +3,7 @@ import { TablePagination } from '@/components/ui/TablePagination';
 import PropertyGrid from '@/features/properties/components/PropertyGrid';
 import PropertyGridSkeleton from '@/features/properties/components/PropertyGridSkeleton';
 import SearchHero from '@/features/properties/components/SearchHero';
+import FavoritesControls from '@/features/properties/components/FavoritesControls';
 import { getProperties } from '@/api/properties.api';
 import { PAGE_SIZE } from '@/lib/constants';
 import { PropertyFilters } from '@/interfaces/PropertyFilters.interface';
@@ -11,54 +12,15 @@ import { getDictionary } from '@/lib/i18n/getDictionary';
 import { defaultLocale, locales } from '@/lib/i18n/config';
 import { Locale, Dictionary } from '@/types/I18n';
 
-
 import { PropertiesPageProps } from '@/interfaces/PropertiesPageProps.interface';
 
-async function PropertiesGrid({
-	currentPage,
-	filters,
-	dictionary,
-	locale,
-}: {
-	currentPage: number;
-	filters: PropertyFilters;
-	dictionary: Dictionary;
-	locale: Locale;
-}) {
-
-	const { data: properties, totalPages, totalCount } = await getProperties(
-		currentPage,
-		PAGE_SIZE,
-		filters,
-	);
-
-	return (
-		<>
-			<PropertyGrid
-				properties={properties}
-				currentPage={currentPage}
-				dictionary={dictionary}
-				locale={locale}
-			/>
-
-			<Suspense fallback={null}>
-				<TablePagination
-					currentPage={currentPage}
-					totalPages={totalPages}
-					totalResults={totalCount}
-					pageSize={PAGE_SIZE}
-					className="mt-12 px-6 py-4 border border-nordic/5 rounded-xl shadow-sm flex items-center justify-between bg-white"
-				/>
-			</Suspense>
-		</>
-	);
-}
+import { PropertiesGrid } from '@/features/properties/components/PropertiesGrid';
 
 export default async function PropertiesPage({
 	searchParams,
 }: PropertiesPageProps) {
 	const [params, cookieStore] = await Promise.all([searchParams, cookies()]);
-	
+
 	const parsedPage = parseInt(params.page ?? '', 10);
 	const currentPage = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1;
 
@@ -87,23 +49,18 @@ export default async function PropertiesPage({
 		baths: params.baths ? parseInt(params.baths, 10) : undefined,
 		location: params.location,
 		listingType: params.listingType,
+		sort: params.sort,
 		...(params.saved === 'true' && { savedIds }),
 	};
 
 	const suspenseKey = JSON.stringify({ currentPage, filters });
 
+	const isFavoriteMode = params.saved === 'true';
+
 	return (
 		<div className='min-h-screen'>
 			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-				<SearchHero />
-				<div className='mb-8'>
-					<h1 className='text-3xl font-light text-nordic'>
-						{dictionary.properties_page.title}
-					</h1>
-					<p className='text-nordic/70 mt-2 text-sm max-w-2xl'>
-						{dictionary.properties_page.description}
-					</p>
-				</div>
+				{!isFavoriteMode && <SearchHero />}
 
 				<Suspense
 					key={suspenseKey}
@@ -112,10 +69,11 @@ export default async function PropertiesPage({
 					<PropertiesGrid
 						currentPage={currentPage}
 						filters={filters}
+						isFavoriteMode={isFavoriteMode}
 						dictionary={dictionary}
 						locale={locale}
+						viewMode={params.view}
 					/>
-
 				</Suspense>
 			</main>
 		</div>

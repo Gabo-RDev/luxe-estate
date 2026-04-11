@@ -4,6 +4,8 @@ import { Dictionary, Locale } from '@/types/I18n';
 export interface PropertyCardProps {
 	property: Property;
 	featuredMode?: boolean;
+	isFavoriteMode?: boolean;
 	dictionary: Dictionary;
 	locale: Locale;
+	viewMode?: string;
 }

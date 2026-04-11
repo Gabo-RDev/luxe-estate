@@ -10,5 +10,7 @@ export interface PropertiesPageProps {
 		location?: string;
 		saved?: string;
 		listingType?: string;
+		sort?: string;
+		view?: string;
 	}>;
 }

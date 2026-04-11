@@ -23,6 +23,16 @@
 		"security": "Seguridad",
 		"garden": "Jardín"
 	},
+	"favorites_page": {
+		"title": "Tus Guardados",
+		"description": "Tienes {count} propiedades guardadas esperándote.",
+		"sort_by_date": "Ordenar por: Fecha añadida",
+		"book_visit": "Agendar Visita",
+		"schedule_tour": "Programar Recorrido",
+		"discover_more": "Descubrir Más",
+		"discover_desc": "Encuentra más propiedades que coincidan con tu estilo de vida.",
+		"browse_listings": "Explorar Listados"
+	},
 	"properties_page": {
 		"title": "Todas Las Propiedades",
 		"description": "Descubre nuestra selección exclusiva de propiedades inmobiliarias de lujo en todo el mundo."
@@ -81,6 +91,7 @@
 		"show_homes": "Mostrar Propiedades"
 	},
 	"property_details": {
+		"back_to_property": "Volver a los detalles de la propiedad",
 		"top_rated_agent": "Agente Mejor Valorado",
 		"schedule_visit": "Agendar Visita",
 		"contact_agent": "Contactar Agente",

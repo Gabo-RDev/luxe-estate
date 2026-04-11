@@ -131,9 +131,15 @@ export const getProperties = cache(
 			}
 		}
 
-		const { data, error, count } = await query
-			.order('created_at', { ascending: true })
-			.range(from, to);
+		if (filters?.sort === 'price_asc') {
+			query = query.order('price', { ascending: true });
+		} else if (filters?.sort === 'price_desc') {
+			query = query.order('price', { ascending: false });
+		} else {
+			query = query.order('created_at', { ascending: false });
+		}
+
+		const { data, error, count } = await query.range(from, to);
 
 		if (error) {
 			console.error('[getProperties]', error.message);

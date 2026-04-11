@@ -7,6 +7,7 @@ import { LanguageSelector } from '../ui/LanguageSelector';
 import { NotificationsDropdown } from './NotificationsDropdown';
 import type { User } from '@supabase/supabase-js';
 import type { Dictionary } from '@/types/I18n';
+import { NavActionsProps } from '@/interfaces/NavActionsProps.interface';
 import dynamic from 'next/dynamic';
 
 const ProfileDropdownContent = dynamic(
@@ -14,11 +15,15 @@ const ProfileDropdownContent = dynamic(
 	{ ssr: false },
 );
 
-interface NavActionsProps {
-	user: User | null;
-	userRole?: string | null;
-	dictionary: Dictionary;
-}
+const UserMotionDiv = dynamic(
+	() => import('framer-motion').then(mod => mod.motion.div),
+	{ ssr: false }
+);
+
+const AnimatePresenceWrapper = dynamic(
+	() => import('framer-motion').then(mod => mod.AnimatePresence),
+	{ ssr: false }
+);
 
 export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 	const { isProfileOpen, setIsProfileOpen, handleSignOut } = useNavigation();
@@ -38,9 +43,9 @@ export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 
 			<div className='hidden md:block h-6 w-px bg-nordic/10 mx-1 md:mx-3'></div>
 
-			<AnimatePresence mode='wait'>
+			<AnimatePresenceWrapper mode='wait'>
 				{user ? (
-					<motion.div
+					<UserMotionDiv
 						key='user-profile'
 						initial={{ opacity: 0, x: 10 }}
 						animate={{ opacity: 1, x: 0 }}
@@ -75,9 +80,9 @@ export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 								onSignOut={handleSignOut}
 							/>
 						)}
-					</motion.div>
+					</UserMotionDiv>
 				) : (
-					<motion.div
+					<UserMotionDiv
 						key='login-btn'
 						initial={{ opacity: 0, x: -10 }}
 						animate={{ opacity: 1, x: 0 }}
@@ -90,9 +95,9 @@ export function NavActions({ user, userRole, dictionary }: NavActionsProps) {
 						>
 							{dictionary.auth.login}
 						</Link>
-					</motion.div>
+					</UserMotionDiv>
 				)}
-			</AnimatePresence>
+			</AnimatePresenceWrapper>
 
 			<LanguageSelector />
 		</div>

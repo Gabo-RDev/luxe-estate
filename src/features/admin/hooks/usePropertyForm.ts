@@ -2,16 +2,15 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import { uploadPropertyImage } from '@/api/storage.api';
-import { Property } from '@/interfaces/Property.interface';
+import { PropertyFormProps } from '@/interfaces/PropertyFormProps.interface';
+import {
+	createProperty,
+	updateProperty,
+	insertPropertyImages,
+} from '@/app/admin/properties/actions';
 
-interface UsePropertyFormOptions {
-	initialData?: Property;
-	isEdit?: boolean;
-}
-
-export function usePropertyForm({ initialData, isEdit = false }: UsePropertyFormOptions) {
+export function usePropertyForm({ initialData, isEdit = false }: PropertyFormProps) {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSavingDraft, setIsSavingDraft] = useState(false);
@@ -26,7 +25,7 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 	});
 	const formRef = useRef<HTMLFormElement>(null);
 
-	const supabase = createClient();
+
 
 	const handleCoordinateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -118,49 +117,33 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 				lng: lngRaw ? Number(lngRaw) : null,
 			};
 
-			// 3. Insert or update property in Supabase
+			// 3. Insert or update property via Server Action (bypasses RLS safely)
 			setUploadStatus('Saving property...');
-			let dbError = null;
 
 			if (isEdit && initialData) {
-				const { error } = await supabase
-					.from('properties')
-					.update(payload)
-					.eq('id', initialData.id);
-				dbError = error;
+				await updateProperty(initialData.id, payload);
 
-				// Append new gallery images to property_images table
-				if (!error && uploadedImageUrls.length > 0) {
+				// Append new gallery images
+				if (uploadedImageUrls.length > 0) {
 					const imageRows = uploadedImageUrls.map((url, i) => ({
 						property_id: initialData.id,
 						url,
 						order: i,
 					}));
-					await supabase.from('property_images').insert(imageRows);
+					await insertPropertyImages(imageRows);
 				}
 			} else {
-				const { data: inserted, error } = await supabase
-					.from('properties')
-					.insert(payload)
-					.select('id')
-					.single();
-				dbError = error;
+				const inserted = await createProperty(payload);
 
 				// Insert gallery images (index 1+) for the new property
-				if (!error && inserted && uploadedImageUrls.length > 1) {
+				if (uploadedImageUrls.length > 1) {
 					const imageRows = uploadedImageUrls.slice(1).map((url, i) => ({
 						property_id: inserted.id,
 						url,
 						order: i + 1,
 					}));
-					await supabase.from('property_images').insert(imageRows);
+					await insertPropertyImages(imageRows);
 				}
-			}
-
-			if (dbError) {
-				setUploadStatus(`❌ Error saving property: ${dbError.message}`);
-				setIsSubmitting(false);
-				return;
 			}
 
 			setUploadStatus('✅ Property saved successfully!');
@@ -210,16 +193,9 @@ export function usePropertyForm({ initialData, isEdit = false }: UsePropertyForm
 
 		try {
 			if (isEdit && initialData) {
-				const { error } = await supabase
-					.from('properties')
-					.update(draftPayload)
-					.eq('id', initialData.id);
-				if (error) throw error;
+				await updateProperty(initialData.id, draftPayload);
 			} else {
-				const { error } = await supabase
-					.from('properties')
-					.insert(draftPayload);
-				if (error) throw error;
+				await createProperty(draftPayload);
 			}
 			setUploadStatus('✅ Draft saved successfully!');
 			setTimeout(() => setUploadStatus(null), 3000);

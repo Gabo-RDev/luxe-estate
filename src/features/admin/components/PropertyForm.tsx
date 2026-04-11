@@ -2,18 +2,14 @@
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { Property } from '@/interfaces/Property.interface';
 import { usePropertyForm } from '@/features/admin/hooks/usePropertyForm';
+import { PropertyFormProps } from '@/interfaces/PropertyFormProps.interface';
+import { PROPERTY_FORM_AMENITIES } from '@/lib/constants';
 
 const PropertyMap = dynamic(
 	() => import('@/features/properties/components/PropertyMap'),
 	{ ssr: false },
 );
-
-interface PropertyFormProps {
-	initialData?: Property;
-	isEdit?: boolean;
-}
 
 export function PropertyForm({
 	initialData,
@@ -515,12 +511,7 @@ export function PropertyForm({
 										Amenities
 									</h3>
 									<div className='space-y-2'>
-										{[
-											'Swimming Pool',
-											'Garden',
-											'Air Conditioning',
-											'Smart Home',
-										].map((amenity) => (
+										{PROPERTY_FORM_AMENITIES.map((amenity) => (
 											<label
 												key={amenity}
 												className='flex items-center gap-2.5 cursor-pointer group'

@@ -1,5 +1,6 @@
 import { getPropertyBySlug } from '@/api/properties.api';
 import Image from 'next/image';
+import Link from 'next/link';
 import PropertyMap from '@/features/properties/components/PropertyMapDynamic';
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 import PropertiesPage from '../page';
@@ -101,12 +102,14 @@ export default async function PropertyDetailsPage({
 								</div>
 
 								<div className='space-y-3'>
-									<button className='w-full bg-mosque hover:bg-primary-hover text-white py-4 px-6 rounded-lg font-medium transition-all shadow-lg shadow-mosque/20 flex items-center justify-center gap-2 group'>
-										<span className='material-icons text-xl group-hover:scale-110 transition-transform'>
-											calendar_today
-										</span>
-										{dictionary.property_details.schedule_visit}
-									</button>
+									<Link href={`/properties/${p.slug}/schedule`} className='block'>
+										<button className='w-full bg-mosque hover:bg-primary-hover text-white py-4 px-6 rounded-lg font-medium transition-all shadow-lg shadow-mosque/20 flex items-center justify-center gap-2 group'>
+											<span className='material-icons text-xl group-hover:scale-110 transition-transform'>
+												calendar_today
+											</span>
+											{dictionary.property_details.schedule_visit}
+										</button>
+									</Link>
 									<button className='w-full bg-transparent border border-nordic/10 hover:border-mosque text-nordic/80 hover:text-mosque py-4 px-6 rounded-lg font-medium transition-all flex items-center justify-center gap-2'>
 										<span className='material-icons text-xl'>mail_outline</span>
 										{dictionary.property_details.contact_agent}

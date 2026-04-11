@@ -23,6 +23,16 @@
 		"security": "Security",
 		"garden": "Garden"
 	},
+	"favorites_page": {
+		"title": "Your Favorites",
+		"description": "You have {count} saved properties waiting for you.",
+		"sort_by_date": "Sort by: Date Added",
+		"book_visit": "Book Visit",
+		"schedule_tour": "Schedule Tour",
+		"discover_more": "Discover More",
+		"discover_desc": "Find more properties that match your lifestyle.",
+		"browse_listings": "Browse Listings"
+	},
 	"properties_page": {
 		"title": "All Properties",
 		"description": "Discover our exclusive selection of luxury real estate properties around the world."
@@ -81,6 +91,7 @@
 		"show_homes": "Show Homes"
 	},
 	"property_details": {
+		"back_to_property": "Back to property details",
 		"top_rated_agent": "Top Rated Agent",
 		"schedule_visit": "Schedule Visit",
 		"contact_agent": "Contact Agent",

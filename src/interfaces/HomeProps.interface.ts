@@ -8,5 +8,6 @@ export interface HomeProps {
 		beds?: string;
 		baths?: string;
 		location?: string;
+		listingType?: string;
 	}>;
 }
